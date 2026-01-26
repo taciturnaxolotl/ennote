@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>enɳoté - Quick Note Capture</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>enɳoté</h1>
+            <p class="tagline">Prepare notes on desktop, execute on phone</p>
+        </header>
+
+        <main>
+            <div id="input-section" class="section">
+                <label for="notes-input">Enter your notes (one per line)</label>
+                <textarea
+                    id="notes-input"
+                    placeholder="Review PR for auth flow&#10;Update dependencies&#10;Write tests for sync&#10;Deploy to staging"
+                    rows="10"
+                ></textarea>
+
+                <div class="note-count">
+                    <span id="count">0</span> notes
+                </div>
+
+                <button id="create-stack" class="primary-button">
+                    Create Stack
+                </button>
+            </div>
+
+            <div id="qr-section" class="section hidden">
+                <div class="qr-container">
+                    <canvas id="qr-canvas"></canvas>
+                </div>
+
+                <div class="timer-container">
+                    <div class="timer-bar">
+                        <div id="timer-progress" class="timer-progress"></div>
+                    </div>
+                    <p class="timer-text">Expires in <span id="countdown">5:00</span></p>
+                </div>
+
+                <p class="instruction">Scan with your iPhone to import notes</p>
+
+                <button id="new-stack" class="secondary-button">
+                    Create New Stack
+                </button>
+            </div>
+        </main>
+
+        <footer>
+            <p>No account required. Notes expire in 5 minutes.</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
