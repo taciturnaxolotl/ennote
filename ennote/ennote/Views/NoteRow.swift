@@ -3,12 +3,24 @@ import SwiftUI
 struct NoteRow: View {
     let note: Note
     var onToggle: (() -> Void)?
+    var onEdit: (() -> Void)?
 
     @State private var visualCompleted: Bool?
     @State private var bounceToggle = false
 
     private var showCompleted: Bool {
         visualCompleted ?? note.isCompleted
+    }
+
+    private var title: String {
+        note.content.components(separatedBy: .newlines).first ?? note.content
+    }
+
+    private var bodyText: String? {
+        let lines = note.content.components(separatedBy: .newlines)
+        guard lines.count > 1 else { return nil }
+        let rest = lines.dropFirst().joined(separator: " ").trimmingCharacters(in: .whitespaces)
+        return rest.isEmpty ? nil : rest
     }
 
     var body: some View {
@@ -27,15 +39,28 @@ struct NoteRow: View {
             .buttonStyle(.plain)
             .sensoryFeedback(.impact(flexibility: .soft, intensity: 0.6), trigger: bounceToggle)
 
-            Text(note.content)
-                .font(.body)
-                .foregroundStyle(showCompleted ? .tertiary : .primary)
-                .lineLimit(2)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.body)
+                    .fontWeight(.medium)
+                    .foregroundStyle(showCompleted ? .tertiary : .primary)
+                    .lineLimit(1)
+
+                if let body = bodyText {
+                    Text(body)
+                        .font(.subheadline)
+                        .foregroundStyle(showCompleted ? .quaternary : .secondary)
+                        .lineLimit(1)
+                }
+            }
 
             Spacer()
         }
         .padding(.vertical, 4)
         .contentShape(Rectangle())
+        .onTapGesture {
+            onEdit?()
+        }
         .onChange(of: note.isCompleted) {
             visualCompleted = nil
         }

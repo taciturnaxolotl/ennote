@@ -201,6 +201,33 @@ struct SmallWidgetNoteList: View {
     }
 }
 
+struct LargeWidgetNoteList: View {
+    let notes: [WidgetNote]
+    let maxNotes: Int
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            ForEach(notes.prefix(maxNotes)) { note in
+                HStack(spacing: 8) {
+                    Image(systemName: "circle")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Text(note.content.components(separatedBy: .newlines).first ?? note.content)
+                        .font(.body)
+                        .lineLimit(1)
+                    Spacer(minLength: 0)
+                }
+                .padding(.vertical, 2)
+            }
+            if notes.count > maxNotes {
+                Text("+\(notes.count - maxNotes)")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+        }
+    }
+}
+
 // MARK: - Medium Widget View
 
 struct MediumWidgetView: View {
@@ -269,19 +296,13 @@ struct LargeWidgetView: View {
 
             Divider()
 
-            // Note list
-            VStack(alignment: .leading, spacing: 4) {
-                ForEach(entry.notes.prefix(5)) { note in
-                    HStack(spacing: 8) {
-                        Image(systemName: "circle")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                        Text(note.content)
-                            .font(.body)
-                            .lineLimit(1)
-                    }
-                    .padding(.vertical, 2)
-                }
+            // Note list - fit as many as possible
+            ViewThatFits(in: .vertical) {
+                LargeWidgetNoteList(notes: entry.notes, maxNotes: 8)
+                LargeWidgetNoteList(notes: entry.notes, maxNotes: 7)
+                LargeWidgetNoteList(notes: entry.notes, maxNotes: 6)
+                LargeWidgetNoteList(notes: entry.notes, maxNotes: 5)
+                LargeWidgetNoteList(notes: entry.notes, maxNotes: 4)
             }
 
             Spacer()

@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		0BBF1FF32F281DA900AF0585 /* ennote.icon in Resources */ = {isa = PBXBuildFile; fileRef = 0BBF1FF22F281DA900AF0585 /* ennote.icon */; };
+		0BBF1FFC2F28705F00AF0585 /* EditNoteSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBF1FFB2F28705F00AF0585 /* EditNoteSheet.swift */; };
+		0BBF1FFD2F28705F00AF0585 /* AddNoteSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBF1FFA2F28705F00AF0585 /* AddNoteSheet.swift */; };
 		A1B2C3D4E5F60001000A0001 /* ennoteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002000A0001 /* ennoteApp.swift */; };
 		A1B2C3D4E5F60001000A0002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002000A0002 /* ContentView.swift */; };
 		A1B2C3D4E5F60001000A0003 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002000A0003 /* Theme.swift */; };
@@ -57,6 +59,8 @@
 
 /* Begin PBXFileReference section */
 		0BBF1FF22F281DA900AF0585 /* ennote.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = ennote.icon; sourceTree = "<group>"; };
+		0BBF1FFA2F28705F00AF0585 /* AddNoteSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNoteSheet.swift; sourceTree = "<group>"; };
+		0BBF1FFB2F28705F00AF0585 /* EditNoteSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditNoteSheet.swift; sourceTree = "<group>"; };
 		A1B2C3D4E5F60002000A0001 /* ennoteApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ennoteApp.swift; sourceTree = "<group>"; };
 		A1B2C3D4E5F60002000A0002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		A1B2C3D4E5F60002000A0003 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
@@ -144,6 +148,8 @@
 		A1B2C3D4E5F60009000A0005 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				0BBF1FFA2F28705F00AF0585 /* AddNoteSheet.swift */,
+				0BBF1FFB2F28705F00AF0585 /* EditNoteSheet.swift */,
 				A1B2C3D4E5F60002000A0006 /* NoteListView.swift */,
 				A1B2C3D4E5F60002000A0007 /* NoteRow.swift */,
 				A1B2C3D4E5F60002000A0008 /* AddNoteField.swift */,
@@ -311,6 +317,8 @@
 				A1B2C3D4E5F60001000A0006 /* NoteListView.swift in Sources */,
 				A1B2C3D4E5F60001000A0007 /* NoteRow.swift in Sources */,
 				A1B2C3D4E5F60001000A0008 /* AddNoteField.swift in Sources */,
+				0BBF1FFC2F28705F00AF0585 /* EditNoteSheet.swift in Sources */,
+				0BBF1FFD2F28705F00AF0585 /* AddNoteSheet.swift in Sources */,
 				A1B2C3D4E5F60001000A0009 /* StackView.swift in Sources */,
 				A1B2C3D4E5F60001000A0010 /* ScannerView.swift in Sources */,
 				A1B2C3D4E5F60001000A0011 /* CloudKitService.swift in Sources */,

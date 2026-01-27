@@ -3,6 +3,7 @@ import SwiftUI
 struct AddNoteField: View {
     @Binding var text: String
     var onSubmit: () -> Void
+    @FocusState private var isFocused: Bool
 
     var body: some View {
         HStack(spacing: 12) {
@@ -13,6 +14,7 @@ struct AddNoteField: View {
             TextField("Add a note...", text: $text)
                 .textFieldStyle(.plain)
                 .submitLabel(.done)
+                .focused($isFocused)
                 .onSubmit {
                     if !text.trimmingCharacters(in: .whitespaces).isEmpty {
                         onSubmit()
@@ -20,6 +22,10 @@ struct AddNoteField: View {
                 }
         }
         .padding(.vertical, 4)
+        .contentShape(Rectangle())
+        .onTapGesture {
+            isFocused = true
+        }
     }
 }
 
