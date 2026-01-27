@@ -4,8 +4,8 @@ struct NoteRow: View {
     let note: Note
     var onToggle: (() -> Void)?
 
-    // Local state for immediate visual feedback
     @State private var visualCompleted: Bool?
+    @State private var bounceToggle = false
 
     private var showCompleted: Bool {
         visualCompleted ?? note.isCompleted
@@ -13,20 +13,20 @@ struct NoteRow: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            // Tappable checkbox
             Button {
-                // Immediate visual feedback
                 visualCompleted = !showCompleted
+                bounceToggle.toggle()
                 onToggle?()
             } label: {
                 Image(systemName: showCompleted ? "checkmark.circle.fill" : "circle")
                     .foregroundStyle(showCompleted ? Color.themeAccent : .secondary)
                     .font(.title3)
                     .contentTransition(.symbolEffect(.replace))
+                    .symbolEffect(.bounce, value: bounceToggle)
             }
             .buttonStyle(.plain)
+            .sensoryFeedback(.impact(flexibility: .soft, intensity: 0.6), trigger: bounceToggle)
 
-            // Note content
             Text(note.content)
                 .font(.body)
                 .foregroundStyle(showCompleted ? .tertiary : .primary)
@@ -37,7 +37,6 @@ struct NoteRow: View {
         .padding(.vertical, 4)
         .contentShape(Rectangle())
         .onChange(of: note.isCompleted) {
-            // Reset override once model catches up
             visualCompleted = nil
         }
     }

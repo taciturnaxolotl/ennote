@@ -144,27 +144,59 @@ struct SmallWidgetView: View {
     var entry: NoteEntry
 
     var body: some View {
-        if let note = entry.notes.first {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(note.content)
-                    .font(.system(.body, design: .rounded))
-                    .lineLimit(3)
+        VStack(alignment: .leading, spacing: 4) {
+            if !entry.notes.isEmpty {
+                ViewThatFits(in: .vertical) {
+                    SmallWidgetNoteList(notes: entry.notes, maxNotes: 4)
+                    SmallWidgetNoteList(notes: entry.notes, maxNotes: 3)
+                    SmallWidgetNoteList(notes: entry.notes, maxNotes: 2)
+                    SmallWidgetNoteList(notes: entry.notes, maxNotes: 1)
+                }
 
                 Spacer()
 
-                if entry.notes.count > 1 {
-                    Text("\(entry.notes.count - 1) more")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                HStack {
+                    if !entry.activityData.isEmpty {
+                        StreakView(activityData: entry.activityData)
+                    }
+                    Spacer()
+                }
+            } else {
+                Text("No notes")
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+                Spacer()
+                if !entry.activityData.isEmpty {
+                    StreakView(activityData: entry.activityData)
                 }
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .containerBackground(.fill.tertiary, for: .widget)
-        } else {
-            Text("No notes")
-                .font(.body)
-                .foregroundStyle(.secondary)
-                .containerBackground(.fill.tertiary, for: .widget)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .containerBackground(.fill.tertiary, for: .widget)
+    }
+}
+
+struct SmallWidgetNoteList: View {
+    let notes: [WidgetNote]
+    let maxNotes: Int
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            ForEach(notes.prefix(maxNotes)) { note in
+                HStack(alignment: .firstTextBaseline, spacing: 8) {
+                    Image(systemName: "circle")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                    Text(note.content)
+                        .font(.subheadline)
+                        .lineLimit(1)
+                }
+            }
+            if notes.count > maxNotes {
+                Text("+\(notes.count - maxNotes)")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
         }
     }
 }
@@ -175,7 +207,7 @@ struct MediumWidgetView: View {
     var entry: NoteEntry
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 4) {
             ForEach(entry.notes.prefix(4)) { note in
                 HStack(spacing: 8) {
                     Image(systemName: "circle")
@@ -185,6 +217,7 @@ struct MediumWidgetView: View {
                         .font(.subheadline)
                         .lineLimit(1)
                 }
+                .padding(.vertical, 2)
             }
 
             Spacer()
@@ -210,6 +243,7 @@ struct StreakView: View {
                         : Color.secondary.opacity(0.2))
                     .frame(width: 8, height: 8)
             }
+            Spacer()
         }
     }
 }
@@ -220,7 +254,7 @@ struct LargeWidgetView: View {
     var entry: NoteEntry
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 4) {
             // Header
             HStack {
                 Text("enɳoté")
@@ -233,30 +267,31 @@ struct LargeWidgetView: View {
                 }
             }
 
-            // Activity streak
-            if !entry.activityData.isEmpty {
-                StreakView(activityData: entry.activityData)
-            }
-
             Divider()
 
             // Note list
-            VStack(alignment: .leading, spacing: 8) {
-                ForEach(Array(entry.notes.enumerated().prefix(5)), id: \.element.id) { index, note in
+            VStack(alignment: .leading, spacing: 4) {
+                ForEach(entry.notes.prefix(5)) { note in
                     HStack(spacing: 8) {
-                        Image(systemName: index == 0 ? "circle.fill" : "circle")
+                        Image(systemName: "circle")
                             .font(.caption)
-                            .foregroundStyle(index == 0 ? Color.accentColor : .secondary)
+                            .foregroundStyle(.secondary)
                         Text(note.content)
-                            .font(index == 0 ? .body.bold() : .body)
+                            .font(.body)
                             .lineLimit(1)
-                            .foregroundStyle(index == 0 ? .primary : .secondary)
                     }
+                    .padding(.vertical, 2)
                 }
             }
 
             Spacer()
+
+            // Activity streak at bottom
+            if !entry.activityData.isEmpty {
+                StreakView(activityData: entry.activityData)
+            }
         }
+        .padding(.top, -4)
         .containerBackground(.fill.tertiary, for: .widget)
     }
 }

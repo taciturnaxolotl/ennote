@@ -1,5 +1,8 @@
 import SwiftUI
 import SwiftData
+import WidgetKit
+
+private let toggleDwellTime: TimeInterval = 0.65
 
 struct NoteListView: View {
     @Environment(\.modelContext) private var modelContext
@@ -130,23 +133,26 @@ struct NoteListView: View {
             modelContext.insert(note)
             newNoteText = ""
         }
+        WidgetCenter.shared.reloadAllTimelines()
     }
 
     private func completeNote(_ note: Note) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.65) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + toggleDwellTime) {
             withAnimation(.snappy(duration: 0.25)) {
                 note.complete()
             }
+            WidgetCenter.shared.reloadAllTimelines()
         }
     }
 
     private func uncompleteNote(_ note: Note) {
         let newOrder = (activeNotes.last?.order ?? -1) + 1
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.65) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + toggleDwellTime) {
             withAnimation(.snappy(duration: 0.25)) {
                 note.uncomplete()
                 note.order = newOrder
             }
+            WidgetCenter.shared.reloadAllTimelines()
         }
     }
 
@@ -154,6 +160,7 @@ struct NoteListView: View {
         withAnimation {
             modelContext.delete(note)
         }
+        WidgetCenter.shared.reloadAllTimelines()
     }
 
     private func moveNotes(from source: IndexSet, to destination: Int) {
@@ -162,6 +169,7 @@ struct NoteListView: View {
         for (index, note) in notes.enumerated() {
             note.order = index
         }
+        WidgetCenter.shared.reloadAllTimelines()
     }
 
     private func clearCompleted() {
@@ -170,6 +178,7 @@ struct NoteListView: View {
                 modelContext.delete(note)
             }
         }
+        WidgetCenter.shared.reloadAllTimelines()
     }
 }
 

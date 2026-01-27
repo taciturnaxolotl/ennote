@@ -9,10 +9,10 @@ import Foundation
 ///
 /// To restore full functionality:
 /// 1. Use a paid team account in Signing & Capabilities
-/// 2. Add App Groups capability with identifier: group.sh.dunkirk.ennote
-/// 3. Add iCloud capability with CloudKit container: iCloud.sh.dunkirk.ennote
+/// 2. Add App Groups capability with identifier: group.sh.dunkirk.ennote.beta
+/// 3. Add iCloud capability with CloudKit container: iCloud.sh.dunkirk.ennote.beta
 enum AppGroup {
-    static let identifier = "group.sh.dunkirk.ennote"
+    static let identifier = "group.sh.dunkirk.ennote.beta"
 
     static var containerURL: URL? {
         FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: identifier)
