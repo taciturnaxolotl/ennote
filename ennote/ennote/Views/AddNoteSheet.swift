@@ -6,6 +6,7 @@ struct AddNoteSheet: View {
     @Environment(\.dismiss) private var dismiss
     @State private var titleText: String = ""
     @State private var bodyText: String = ""
+    @State private var addedCount: Int = 0
     @FocusState private var focusedField: Field?
 
     enum Field {
@@ -21,24 +22,25 @@ struct AddNoteSheet: View {
 
     var body: some View {
         NavigationStack {
-            VStack(alignment: .leading, spacing: 4) {
-                TextField("Title", text: $titleText)
-                    .font(.title2.bold())
-                    .focused($focusedField, equals: .title)
-                    .submitLabel(.next)
-                    .onSubmit {
-                        focusedField = .body
-                    }
+            ScrollView {
+                VStack(alignment: .leading, spacing: 8) {
+                    TextField("Title", text: $titleText)
+                        .font(.title2.bold())
+                        .focused($focusedField, equals: .title)
+                        .submitLabel(.next)
+                        .onSubmit {
+                            focusedField = .body
+                        }
 
-                TextField("Notes", text: $bodyText, axis: .vertical)
-                    .font(.body)
-                    .foregroundStyle(.secondary)
-                    .focused($focusedField, equals: .body)
-
-                Spacer()
+                    TextEditor(text: $bodyText)
+                        .font(.body)
+                        .scrollContentBackground(.hidden)
+                        .focused($focusedField, equals: .body)
+                        .frame(minHeight: 200)
+                }
+                .padding()
             }
-            .padding()
-            .navigationTitle("Add Note")
+            .navigationTitle(addedCount > 0 ? "Add Note (x\(addedCount))" : "Add Note")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -58,7 +60,7 @@ struct AddNoteSheet: View {
         .onAppear {
             focusedField = .title
         }
-        .presentationDetents([.height(200)])
+        .presentationDetents([.large])
         .presentationDragIndicator(.visible)
     }
 
@@ -68,6 +70,7 @@ struct AddNoteSheet: View {
         onAdd(content)
         titleText = ""
         bodyText = ""
+        addedCount += 1
         focusedField = .title
     }
 }

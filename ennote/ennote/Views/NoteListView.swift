@@ -69,22 +69,19 @@ struct NoteListView: View {
                 .buttonStyle(.plain)
 
             } header: {
-                if !activeNotes.isEmpty {
-                    HStack {
+                HStack(alignment: .firstTextBaseline) {
+                    Text("enɳoté")
+                        .font(.largeTitle.bold())
+                        .foregroundColor(.primary)
+                    Spacer()
+                    if !activeNotes.isEmpty {
                         Text("\(activeNotes.count) notes")
-                            .font(.caption)
+                            .font(.subheadline)
                             .foregroundStyle(.secondary)
-                        Spacer()
-                        if activeNotes.count >= 2 {
-                            Button("Stack Mode") {
-                                showStackMode = true
-                            }
-                            .font(.caption)
-                            .foregroundStyle(Color.themeAccent)
-                        }
                     }
-                    .textCase(nil)
                 }
+                .textCase(nil)
+                .listRowInsets(EdgeInsets(top: 16, leading: 20, bottom: 12, trailing: 20))
             }
 
             // Completed Notes Section
@@ -134,7 +131,8 @@ struct NoteListView: View {
             }
         }
         .listStyle(.insetGrouped)
-        .navigationTitle("enɳoté")
+        .navigationTitle("")
+        .navigationBarTitleDisplayMode(.inline)
         .scrollDismissesKeyboard(.interactively)
         .overlay {
             if activeNotes.isEmpty && completedNotes.isEmpty {
