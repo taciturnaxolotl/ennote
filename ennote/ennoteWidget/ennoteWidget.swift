@@ -266,7 +266,7 @@ struct StreakView: View {
             ForEach(activityData) { day in
                 Circle()
                     .fill(day.completedCount > 0
-                        ? Color.accentColor.opacity(day.intensity)
+                        ? Color.themeAccent.opacity(day.intensity)
                         : Color.secondary.opacity(0.2))
                     .frame(width: 8, height: 8)
             }

@@ -1,10 +1,16 @@
 import SwiftUI
 import SwiftData
+import WidgetKit
 
 struct ContentView: View {
-    @State private var selectedTab = 0
+    @Environment(\.modelContext) private var modelContext
+    @Query(filter: #Predicate<Note> { !$0.isCompleted },
+           sort: \Note.order)
+    private var activeNotes: [Note]
+
     @State private var showScanner = false
     @State private var showStackMode = false
+    @State private var showAddSheet = false
 
     var body: some View {
         NavigationStack {
@@ -32,6 +38,16 @@ struct ContentView: View {
                 .fullScreenCover(isPresented: $showStackMode) {
                     StackView(isPresented: $showStackMode)
                 }
+                .overlay {
+                    FloatingAddButton {
+                        showAddSheet = true
+                    }
+                }
+                .sheet(isPresented: $showAddSheet) {
+                    AddNoteSheet(onAdd: { content in
+                        addNote(content: content)
+                    })
+                }
         }
         .tint(Color.themeAccent)
         .onOpenURL { url in
@@ -44,6 +60,20 @@ struct ContentView: View {
             // TODO: Fetch stack from CloudKit and import notes
             print("Importing stack: \(stackId)")
         }
+    }
+
+    private func addNote(content: String) {
+        let trimmed = content.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+
+        withAnimation {
+            let note = Note(
+                content: trimmed,
+                order: (activeNotes.last?.order ?? -1) + 1
+            )
+            modelContext.insert(note)
+        }
+        WidgetCenter.shared.reloadAllTimelines()
     }
 }
 

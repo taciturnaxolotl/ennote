@@ -16,7 +16,6 @@ struct NoteListView: View {
 
     @Binding var showStackMode: Bool
     @State private var editingNote: Note?
-    @State private var showAddSheet = false
 
     var body: some View {
         List {
@@ -51,22 +50,6 @@ struct NoteListView: View {
                     }
                 }
                 .onMove(perform: moveNotes)
-
-                // Add Note Button
-                Button {
-                    showAddSheet = true
-                } label: {
-                    HStack(spacing: 12) {
-                        Image(systemName: "plus.circle.fill")
-                            .foregroundStyle(Color.themeAccent)
-                            .font(.title3)
-                        Text("Add a note...")
-                            .foregroundStyle(.secondary)
-                        Spacer()
-                    }
-                    .padding(.vertical, 4)
-                }
-                .buttonStyle(.plain)
 
             } header: {
                 HStack(alignment: .firstTextBaseline) {
@@ -139,7 +122,7 @@ struct NoteListView: View {
                 ContentUnavailableView {
                     Label("No Notes", systemImage: "note.text")
                 } description: {
-                    Text("Add your first note below or scan a QR code to import.")
+                    Text("Tap the + button to add your first note.")
                 }
             }
         }
@@ -149,28 +132,9 @@ struct NoteListView: View {
                 WidgetCenter.shared.reloadAllTimelines()
             })
         }
-        .sheet(isPresented: $showAddSheet) {
-            AddNoteSheet(onAdd: { content in
-                addNote(content: content)
-            })
-        }
     }
 
     // MARK: - Actions
-
-    private func addNote(content: String) {
-        let trimmed = content.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return }
-
-        withAnimation {
-            let note = Note(
-                content: trimmed,
-                order: (activeNotes.last?.order ?? -1) + 1
-            )
-            modelContext.insert(note)
-        }
-        WidgetCenter.shared.reloadAllTimelines()
-    }
 
     private func startEditing(_ note: Note) {
         editingNote = note
