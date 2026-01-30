@@ -11,6 +11,7 @@ struct ContentView: View {
     @State private var showScanner = false
     @State private var showStackMode = false
     @State private var showAddSheet = false
+    @State private var selectedDetent: PresentationDetent = .height(72)
 
     var body: some View {
         NavigationStack {
@@ -38,18 +39,19 @@ struct ContentView: View {
                 .fullScreenCover(isPresented: $showStackMode) {
                     StackView(isPresented: $showStackMode)
                 }
-                .overlay {
-                    FloatingAddButton {
-                        showAddSheet = true
-                    }
-                }
                 .sheet(isPresented: $showAddSheet) {
                     AddNoteSheet(onAdd: { content in
                         addNote(content: content)
-                    })
+                    }, selectedDetent: $selectedDetent)
+                    .presentationDetents([.height(72), .large], selection: $selectedDetent)
+                    .presentationBackgroundInteraction(.enabled(upThrough: .height(72)))
+                    .interactiveDismissDisabled()
                 }
         }
         .tint(Color.themeAccent)
+        .onAppear {
+            showAddSheet = true
+        }
         .onOpenURL { url in
             handleDeepLink(url)
         }

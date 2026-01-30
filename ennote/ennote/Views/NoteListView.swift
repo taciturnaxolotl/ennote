@@ -100,6 +100,7 @@ struct NoteListView: View {
             }
         }
         .listStyle(.insetGrouped)
+        .contentMargins(.bottom, 80, for: .scrollContent)
         .navigationTitle("enɳoté")
         .navigationBarTitleDisplayMode(.large)
 
@@ -109,7 +110,7 @@ struct NoteListView: View {
                 ContentUnavailableView {
                     Label("No Notes", systemImage: "note.text")
                 } description: {
-                    Text("Tap the + button to add your first note.")
+                    Text("Drag up to add your first note.")
                 }
             }
         }

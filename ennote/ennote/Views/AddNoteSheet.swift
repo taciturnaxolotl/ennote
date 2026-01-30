@@ -2,8 +2,8 @@ import SwiftUI
 
 struct AddNoteSheet: View {
     let onAdd: (String) -> Void
+    @Binding var selectedDetent: PresentationDetent
 
-    @Environment(\.dismiss) private var dismiss
     @State private var titleText: String = ""
     @State private var bodyText: String = ""
     @State private var addedCount: Int = 0
@@ -18,6 +18,14 @@ struct AddNoteSheet: View {
             return titleText
         }
         return titleText + "\n" + bodyText
+    }
+    
+    private var hasContent: Bool {
+        !titleText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+    
+    private var isExpanded: Bool {
+        selectedDetent == .large
     }
 
     var body: some View {
@@ -40,28 +48,31 @@ struct AddNoteSheet: View {
                 }
                 .padding()
             }
-            .navigationTitle(addedCount > 0 ? "Add Note (x\(addedCount))" : "Add Note")
+            .navigationTitle(addedCount > 0 ? "Add Note (\(addedCount))" : "Add Note")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Done") {
-                        dismiss()
+                if isExpanded {
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Add") {
+                            submitNote()
+                        }
+                        .fontWeight(.semibold)
+                        .disabled(!hasContent)
                     }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Add") {
-                        submitNote()
-                    }
-                    .fontWeight(.semibold)
-                    .disabled(titleText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
             }
         }
-        .onAppear {
-            focusedField = .title
-        }
-        .presentationDetents([.large])
         .presentationDragIndicator(.visible)
+        .onTapGesture {
+            if !isExpanded {
+                selectedDetent = .large
+            }
+        }
+        .onChange(of: isExpanded) { _, expanded in
+            if expanded {
+                focusedField = .title
+            }
+        }
     }
 
     private func submitNote() {
@@ -72,9 +83,12 @@ struct AddNoteSheet: View {
         bodyText = ""
         addedCount += 1
         focusedField = .title
+        
+        let generator = UIImpactFeedbackGenerator(style: .light)
+        generator.impactOccurred()
     }
 }
 
 #Preview {
-    AddNoteSheet(onAdd: { _ in })
+    AddNoteSheet(onAdd: { _ in }, selectedDetent: .constant(.large))
 }
