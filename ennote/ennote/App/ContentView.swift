@@ -52,6 +52,21 @@ struct ContentView: View {
         .onAppear {
             showAddSheet = true
         }
+        .onChange(of: showStackMode) { _, isShowing in
+            if isShowing {
+                showAddSheet = false
+            } else {
+                selectedDetent = .height(72)
+                showAddSheet = true
+            }
+        }
+        .onChange(of: showScanner) { _, isShowing in
+            if isShowing {
+                showAddSheet = false
+            } else {
+                showAddSheet = true
+            }
+        }
         .onOpenURL { url in
             handleDeepLink(url)
         }
