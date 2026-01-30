@@ -52,6 +52,11 @@ struct AddNoteSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 if isExpanded {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Cancel") {
+                            cancelAndClose()
+                        }
+                    }
                     ToolbarItem(placement: .confirmationAction) {
                         Button("Add") {
                             submitNote()
@@ -86,6 +91,13 @@ struct AddNoteSheet: View {
         
         let generator = UIImpactFeedbackGenerator(style: .light)
         generator.impactOccurred()
+    }
+    
+    private func cancelAndClose() {
+        titleText = ""
+        bodyText = ""
+        focusedField = nil
+        selectedDetent = .height(72)
     }
 }
 

@@ -39,6 +39,11 @@ struct ContentView: View {
                 .fullScreenCover(isPresented: $showStackMode) {
                     StackView(isPresented: $showStackMode)
                 }
+                .onChange(of: showStackMode) { _, isShowing in
+                    if !isShowing {
+                        selectedDetent = .height(72)
+                    }
+                }
                 .sheet(isPresented: $showAddSheet) {
                     AddNoteSheet(onAdd: { content in
                         addNote(content: content)
