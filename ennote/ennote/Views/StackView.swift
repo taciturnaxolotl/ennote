@@ -1,7 +1,7 @@
 import SwiftUI
 import SwiftData
 import WidgetKit
-import DurationPicker
+
 import ConfettiSwiftUI
 
 struct StackView: View {
@@ -206,13 +206,8 @@ struct StackView: View {
                 completeCurrentNote()
             } label: {
                 Image(systemName: "checkmark.circle.fill")
-                    .font(.system(size: 44))
+                    .font(.system(size: 56))
                     .foregroundStyle(Color.themeAccent)
-                    .background(
-                        Circle()
-                            .fill(Color.background)
-                            .padding(8)
-                    )
             }
         }
         .padding(.horizontal, 24)
@@ -360,15 +355,36 @@ struct TimerPickerSheet: View {
     @Binding var timerEnd: Date?
     @Binding var timerStart: Date?
     
-    @State private var duration: TimeInterval = 15 * 60
+    @State private var selectedMinutes: Int = 15
+    @State private var selectedSeconds: Int = 0
+    
+    private let minuteOptions = Array(0...59)
+    private let secondOptions = Array(0...59)
     
     var body: some View {
         VStack(spacing: 24) {
-            DurationPickerView(duration: $duration)
-                .frame(height: 180)
+            HStack(spacing: 0) {
+                Picker("Minutes", selection: $selectedMinutes) {
+                    ForEach(minuteOptions, id: \.self) { minute in
+                        Text("\(minute) min").tag(minute)
+                    }
+                }
+                .pickerStyle(.wheel)
+                .frame(maxWidth: .infinity)
+                
+                Picker("Seconds", selection: $selectedSeconds) {
+                    ForEach(secondOptions, id: \.self) { second in
+                        Text("\(second) sec").tag(second)
+                    }
+                }
+                .pickerStyle(.wheel)
+                .frame(maxWidth: .infinity)
+            }
+            .frame(height: 180)
             
             VStack(spacing: 12) {
                 Button {
+                    let duration = TimeInterval(selectedMinutes * 60 + selectedSeconds)
                     timerStart = Date()
                     timerEnd = Date().addingTimeInterval(duration)
                     let generator = UIImpactFeedbackGenerator(style: .light)
@@ -383,6 +399,7 @@ struct TimerPickerSheet: View {
                         .background(.ultraThinMaterial)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
+                .disabled(selectedMinutes == 0 && selectedSeconds == 0)
                 
                 if timerEnd != nil {
                     Button(role: .destructive) {
@@ -402,44 +419,10 @@ struct TimerPickerSheet: View {
         }
         .onAppear {
             if let end = timerEnd, let start = timerStart {
-                duration = end.timeIntervalSince(start)
+                let duration = Int(end.timeIntervalSince(start))
+                selectedMinutes = duration / 60
+                selectedSeconds = duration % 60
             }
-        }
-    }
-}
-
-// MARK: - DurationPicker Wrapper
-
-struct DurationPickerView: UIViewRepresentable {
-    @Binding var duration: TimeInterval
-    
-    func makeUIView(context: Context) -> DurationPicker {
-        let picker = DurationPicker()
-        picker.pickerMode = .minuteSecond
-        picker.duration = duration
-        picker.addTarget(context.coordinator, action: #selector(Coordinator.durationChanged), for: .valueChanged)
-        return picker
-    }
-    
-    func updateUIView(_ picker: DurationPicker, context: Context) {
-        if picker.duration != duration {
-            picker.duration = duration
-        }
-    }
-    
-    func makeCoordinator() -> Coordinator {
-        Coordinator(duration: $duration)
-    }
-    
-    class Coordinator: NSObject {
-        @Binding var duration: TimeInterval
-        
-        init(duration: Binding<TimeInterval>) {
-            _duration = duration
-        }
-        
-        @objc func durationChanged(_ picker: DurationPicker) {
-            duration = picker.duration
         }
     }
 }

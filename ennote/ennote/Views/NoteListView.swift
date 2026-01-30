@@ -27,7 +27,7 @@ struct NoteListView: View {
                     } onEdit: {
                         startEditing(note)
                     }
-                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                    .swipeActions(edge: .leading, allowsFullSwipe: true) {
                         Button {
                             completeNote(note)
                         } label: {
@@ -35,7 +35,7 @@ struct NoteListView: View {
                         }
                         .tint(Color.themeAccent)
                     }
-                    .swipeActions(edge: .leading, allowsFullSwipe: false) {
+                    .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                         Button(role: .destructive) {
                             deleteNote(note)
                         } label: {
@@ -51,20 +51,6 @@ struct NoteListView: View {
                 }
                 .onMove(perform: moveNotes)
 
-            } header: {
-                HStack(alignment: .firstTextBaseline) {
-                    Text("enɳoté")
-                        .font(.largeTitle.bold())
-                        .foregroundColor(.primary)
-                    Spacer()
-                    if !activeNotes.isEmpty {
-                        Text("\(activeNotes.count) notes")
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                    }
-                }
-                .textCase(nil)
-                .listRowInsets(EdgeInsets(top: 16, leading: 20, bottom: 12, trailing: 20))
             }
 
             // Completed Notes Section
@@ -76,7 +62,7 @@ struct NoteListView: View {
                         } onEdit: {
                             startEditing(note)
                         }
-                        .swipeActions(edge: .trailing) {
+                        .swipeActions(edge: .leading, allowsFullSwipe: true) {
                             Button {
                                 uncompleteNote(note)
                             } label: {
@@ -84,7 +70,7 @@ struct NoteListView: View {
                             }
                             .tint(Color.themeAccent)
                         }
-                        .swipeActions(edge: .leading, allowsFullSwipe: false) {
+                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                             Button(role: .destructive) {
                                 deleteNote(note)
                             } label: {
@@ -114,8 +100,9 @@ struct NoteListView: View {
             }
         }
         .listStyle(.insetGrouped)
-        .navigationTitle("")
-        .navigationBarTitleDisplayMode(.inline)
+        .navigationTitle("enɳoté")
+        .navigationBarTitleDisplayMode(.large)
+
         .scrollDismissesKeyboard(.interactively)
         .overlay {
             if activeNotes.isEmpty && completedNotes.isEmpty {
@@ -141,7 +128,8 @@ struct NoteListView: View {
     }
 
     private func completeNote(_ note: Note) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + toggleDwellTime) {
+        Task {
+            try? await Task.sleep(for: .seconds(toggleDwellTime))
             withAnimation(.snappy(duration: 0.25)) {
                 note.complete()
             }
@@ -151,7 +139,8 @@ struct NoteListView: View {
 
     private func uncompleteNote(_ note: Note) {
         let newOrder = (activeNotes.last?.order ?? -1) + 1
-        DispatchQueue.main.asyncAfter(deadline: .now() + toggleDwellTime) {
+        Task {
+            try? await Task.sleep(for: .seconds(toggleDwellTime))
             withAnimation(.snappy(duration: 0.25)) {
                 note.uncomplete()
                 note.order = newOrder
