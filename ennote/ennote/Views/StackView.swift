@@ -2,6 +2,7 @@ import SwiftUI
 import SwiftData
 import WidgetKit
 import DurationPicker
+import ConfettiSwiftUI
 
 struct StackView: View {
     @Environment(\.modelContext) private var modelContext
@@ -16,7 +17,7 @@ struct StackView: View {
     @State private var timerEnd: Date?
     @State private var timerStart: Date?
     @State private var showTimerPicker = false
-    @State private var showConfetti = false
+    @State private var confettiCounter = 0
     
     var body: some View {
         ZStack {
@@ -58,12 +59,8 @@ struct StackView: View {
                     bottomControls
                 }
             }
-            
-            // Confetti effect
-            if showConfetti {
-                ConfettiView()
-            }
         }
+        .confettiCannon(trigger: $confettiCounter, num: 50, radius: 400)
         .preferredColorScheme(.dark)
         .onAppear {
             if initialCount == nil {
@@ -223,38 +220,31 @@ struct StackView: View {
     }
     
     private var completedView: some View {
-        VStack(spacing: 32) {
-            // Success animation
-            ZStack {
-                Circle()
-                    .fill(Color.themeAccent.opacity(0.2))
-                    .frame(width: 120, height: 120)
-                
-                Circle()
-                    .fill(Color.themeAccent.opacity(0.4))
-                    .frame(width: 100, height: 100)
-                
-                Image(systemName: "checkmark")
-                    .font(.system(size: 44, weight: .bold))
-                    .foregroundStyle(Color.themeAccent)
-            }
-            .scaleEffect(showConfetti ? 1.0 : 0.5)
-            .animation(.spring(response: 0.5, dampingFraction: 0.6), value: showConfetti)
+        VStack(spacing: 48) {
+            Spacer()
             
-            VStack(spacing: 8) {
-                Text("All done!")
-                    .font(.system(size: 32, weight: .bold, design: .rounded))
+            // Success icon
+            Image(systemName: "checkmark.circle.fill")
+                .font(.system(size: 72))
+                .foregroundStyle(Color.success)
+                .symbolEffect(.bounce, value: confettiCounter)
+            
+            VStack(spacing: 12) {
+                Text("All Done!")
+                    .font(.largeTitle.weight(.bold))
                     .foregroundStyle(.primary)
                 
-                Text("\(totalCount) notes completed")
+                Text("\(totalCount) \(totalCount == 1 ? "note" : "notes") completed")
                     .font(.title3)
                     .foregroundStyle(.secondary)
             }
             
+            Spacer()
+            
             Button {
                 isPresented = false
             } label: {
-                Text("Finish")
+                Text("Done")
                     .font(.headline)
                     .foregroundStyle(.primary)
                     .frame(maxWidth: .infinity)
@@ -262,11 +252,11 @@ struct StackView: View {
                     .background(.ultraThinMaterial)
                     .clipShape(RoundedRectangle(cornerRadius: 16))
             }
-            .padding(.horizontal, 48)
-            .padding(.top, 16)
+            .padding(.horizontal, 32)
+            .padding(.bottom, 32)
         }
         .onAppear {
-            showConfetti = true
+            confettiCounter += 1
             let generator = UINotificationFeedbackGenerator()
             generator.notificationOccurred(.success)
         }
@@ -451,58 +441,6 @@ struct DurationPickerView: UIViewRepresentable {
         @objc func durationChanged(_ picker: DurationPicker) {
             duration = picker.duration
         }
-    }
-}
-
-// MARK: - Confetti View
-
-struct ConfettiView: View {
-    @State private var animate = false
-    
-    var body: some View {
-        ZStack {
-            ForEach(0..<30) { index in
-                ConfettiPiece(index: index, animate: animate)
-            }
-        }
-        .onAppear {
-            animate = true
-        }
-    }
-}
-
-struct ConfettiPiece: View {
-    let index: Int
-    let animate: Bool
-    
-    @State private var position: CGPoint = .zero
-    @State private var opacity: Double = 1
-    @State private var rotation: Double = 0
-    
-    private let colors: [Color] = [.themeAccent, .success, .blue, .purple, .pink, .orange]
-    
-    var body: some View {
-        Circle()
-            .fill(colors[index % colors.count])
-            .frame(width: CGFloat.random(in: 4...8), height: CGFloat.random(in: 4...8))
-            .position(position)
-            .opacity(opacity)
-            .rotationEffect(.degrees(rotation))
-            .onAppear {
-                let startX = CGFloat.random(in: 100...300)
-                let startY = CGFloat.random(in: 200...400)
-                position = CGPoint(x: startX, y: startY)
-                
-                withAnimation(
-                    .easeOut(duration: Double.random(in: 1...2))
-                    .delay(Double.random(in: 0...0.5))
-                ) {
-                    position.y += CGFloat.random(in: 200...400)
-                    position.x += CGFloat.random(in: -100...100)
-                    opacity = 0
-                    rotation = Double.random(in: -360...360)
-                }
-            }
     }
 }
 
