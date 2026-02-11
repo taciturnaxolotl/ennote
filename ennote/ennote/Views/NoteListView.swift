@@ -35,12 +35,14 @@ struct NoteListView: View {
                         }
                         .tint(Color.themeAccent)
                     }
-                    .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                         Button(role: .destructive) {
                             deleteNote(note)
                         } label: {
                             Label("Delete", systemImage: "trash")
                         }
+                        .tint(.red)
+
                         Button {
                             startEditing(note)
                         } label: {
@@ -70,12 +72,14 @@ struct NoteListView: View {
                             }
                             .tint(Color.themeAccent)
                         }
-                        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                             Button(role: .destructive) {
                                 deleteNote(note)
                             } label: {
                                 Label("Delete", systemImage: "trash")
                             }
+                            .tint(.red)
+
                             Button {
                                 startEditing(note)
                             } label: {
