@@ -8,10 +8,9 @@ struct ContentView: View {
            sort: \Note.order)
     private var activeNotes: [Note]
 
-    enum Presentation: Equatable {
+    enum SheetType: Equatable {
         case none
         case scanner
-        case stackView
         case noteEditor(note: Note?, detent: PresentationDetent)
 
         var isNoteEditor: Bool {
@@ -19,9 +18,9 @@ struct ContentView: View {
             return false
         }
 
-        static func == (lhs: Presentation, rhs: Presentation) -> Bool {
+        static func == (lhs: SheetType, rhs: SheetType) -> Bool {
             switch (lhs, rhs) {
-            case (.none, .none), (.scanner, .scanner), (.stackView, .stackView):
+            case (.none, .none), (.scanner, .scanner):
                 return true
             case (.noteEditor(let lNote, let lDetent), .noteEditor(let rNote, let rDetent)):
                 return lNote?.id == rNote?.id && lDetent == rDetent
@@ -31,11 +30,11 @@ struct ContentView: View {
         }
     }
 
-    @State private var presentation: Presentation = .noteEditor(note: nil, detent: .height(72))
-    @State private var editingNote: Note?
+    @State private var sheetType: SheetType = .noteEditor(note: nil, detent: .height(72))
+    @State private var showStackView = false
 
     private var editorDetent: PresentationDetent {
-        if case .noteEditor(_, let detent) = presentation {
+        if case .noteEditor(_, let detent) = sheetType {
             return detent
         }
         return .height(72)
@@ -44,18 +43,15 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             NoteListView(
-                showStackMode: .init(
-                    get: { presentation == .stackView },
-                    set: { if $0 { presentation = .stackView } }
-                ),
+                showStackMode: $showStackView,
                 onEditNote: { note in
-                    presentation = .noteEditor(note: note, detent: .large)
+                    sheetType = .noteEditor(note: note, detent: .large)
                 }
             )
                 .toolbar {
                     ToolbarItem(placement: .topBarLeading) {
                         Button {
-                            presentation = .scanner
+                            sheetType = .scanner
                         } label: {
                             Image(systemName: "qrcode.viewfinder")
                         }
@@ -63,42 +59,37 @@ struct ContentView: View {
 
                     ToolbarItem(placement: .topBarTrailing) {
                         Button {
-                            presentation = .stackView
+                            showStackView = true
                         } label: {
                             Image(systemName: "rectangle.stack.fill")
                         }
                     }
                 }
                 .sheet(isPresented: .init(
-                    get: { presentation == .scanner },
-                    set: { if !$0 { presentation = .noteEditor(note: nil, detent: .height(72)) } }
+                    get: { sheetType == .scanner },
+                    set: { if !$0 { sheetType = .noteEditor(note: nil, detent: .height(72)) } }
                 )) {
                     ScannerView()
                 }
-                .fullScreenCover(isPresented: .init(
-                    get: { presentation == .stackView },
-                    set: { if !$0 {
-                        presentation = .none
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                            presentation = .noteEditor(note: nil, detent: .height(72))
+                .fullScreenCover(isPresented: $showStackView) {
+                    StackView(isPresented: $showStackView)
+                }
+                .onChange(of: showStackView) { _, isShowing in
+                    if isShowing {
+                        // Hide sheet when showing stack view
+                        sheetType = .none
+                    } else {
+                        // Re-show collapsed sheet
+                        DispatchQueue.main.asyncAfter(deadline: .now()) {
+                            sheetType = .noteEditor(note: nil, detent: .height(72))
                         }
-                    } }
-                )) {
-                    StackView(isPresented: .init(
-                        get: { presentation == .stackView },
-                        set: { if !$0 {
-                            presentation = .none
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                presentation = .noteEditor(note: nil, detent: .height(72))
-                            }
-                        } }
-                    ))
+                    }
                 }
                 .sheet(isPresented: .init(
-                    get: { presentation.isNoteEditor },
-                    set: { if !$0 { presentation = .none } }
+                    get: { sheetType.isNoteEditor },
+                    set: { if !$0 { sheetType = .none } }
                 )) {
-                    if case .noteEditor(let note, _) = presentation {
+                    if case .noteEditor(let note, _) = sheetType {
                         NoteEditorSheet(
                             note: note,
                             onSave: { content in
@@ -110,13 +101,13 @@ struct ContentView: View {
                             },
                             onCancel: {
                                 // Transition from edit to add mode
-                                presentation = .noteEditor(note: nil, detent: .height(72))
+                                sheetType = .noteEditor(note: nil, detent: .height(72))
                             },
                             selectedDetent: .init(
                                 get: { editorDetent },
                                 set: { newDetent in
-                                    if case .noteEditor(let note, _) = presentation {
-                                        presentation = .noteEditor(note: note, detent: newDetent)
+                                    if case .noteEditor(let note, _) = sheetType {
+                                        sheetType = .noteEditor(note: note, detent: newDetent)
                                     }
                                 }
                             )
@@ -126,8 +117,8 @@ struct ContentView: View {
                             selection: .init(
                                 get: { editorDetent },
                                 set: { newDetent in
-                                    if case .noteEditor(let note, _) = presentation {
-                                        presentation = .noteEditor(note: note, detent: newDetent)
+                                    if case .noteEditor(let note, _) = sheetType {
+                                        sheetType = .noteEditor(note: note, detent: newDetent)
                                     }
                                 }
                             )
