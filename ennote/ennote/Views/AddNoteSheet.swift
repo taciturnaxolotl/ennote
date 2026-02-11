@@ -4,26 +4,20 @@ struct AddNoteSheet: View {
     let onAdd: (String) -> Void
     @Binding var selectedDetent: PresentationDetent
 
-    @State private var titleText: String = ""
-    @State private var bodyText: String = ""
+    @State private var noteText: String = ""
     @State private var addedCount: Int = 0
-    @FocusState private var focusedField: Field?
+    @FocusState private var isFocused: Bool
 
-    enum Field {
-        case title, body
+    private var displayTitle: String {
+        let lines = noteText.components(separatedBy: .newlines)
+        let firstLine = lines.first?.trimmingCharacters(in: .whitespaces) ?? ""
+        return firstLine.isEmpty ? "New Note" : firstLine
     }
 
-    private var combinedContent: String {
-        if bodyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            return titleText
-        }
-        return titleText + "\n" + bodyText
-    }
-    
     private var hasContent: Bool {
-        !titleText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        !noteText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
-    
+
     private var isExpanded: Bool {
         selectedDetent == .large
     }
@@ -32,25 +26,20 @@ struct AddNoteSheet: View {
         Group {
             if isExpanded {
                 NavigationStack {
-                    ScrollView {
-                        VStack(alignment: .leading, spacing: 8) {
-                            TextField("Title", text: $titleText)
-                                .font(.title2.bold())
-                                .focused($focusedField, equals: .title)
-                                .submitLabel(.next)
-                                .onSubmit {
-                                    focusedField = .body
-                                }
+                    ZStack(alignment: .topLeading) {
+                        StyledTextEditor(text: $noteText, onCommit: submitNote)
+                            .focused($isFocused)
 
-                            TextEditor(text: $bodyText)
-                                .font(.body)
-                                .scrollContentBackground(.hidden)
-                                .focused($focusedField, equals: .body)
-                                .frame(minHeight: 200)
+                        if noteText.isEmpty {
+                            Text("Title")
+                                .font(.system(size: 28, weight: .bold))
+                                .foregroundStyle(.tertiary)
+                                .padding(.leading, 21)
+                                .padding(.top, 8)
+                                .allowsHitTesting(false)
                         }
-                        .padding()
                     }
-                    .navigationTitle(addedCount > 0 ? "New Note (\(addedCount))" : "New Note")
+                    .navigationTitle(addedCount > 0 ? "\(displayTitle) (\(addedCount))" : displayTitle)
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {
@@ -87,10 +76,10 @@ struct AddNoteSheet: View {
         .onChange(of: isExpanded) { _, expanded in
             if expanded {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    focusedField = .title
+                    isFocused = true
                 }
             } else {
-                focusedField = nil
+                isFocused = false
                 // Reset counter when sheet closes
                 addedCount = 0
             }
@@ -98,22 +87,20 @@ struct AddNoteSheet: View {
     }
 
     private func submitNote() {
-        let content = combinedContent.trimmingCharacters(in: .whitespacesAndNewlines)
+        let content = noteText.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !content.isEmpty else { return }
         onAdd(content)
-        titleText = ""
-        bodyText = ""
+        noteText = ""
         addedCount += 1
-        focusedField = .title
-        
+        isFocused = true
+
         let generator = UIImpactFeedbackGenerator(style: .light)
         generator.impactOccurred()
     }
-    
+
     private func cancelAndClose() {
-        titleText = ""
-        bodyText = ""
-        focusedField = nil
+        noteText = ""
+        isFocused = false
         selectedDetent = .height(72)
     }
 }

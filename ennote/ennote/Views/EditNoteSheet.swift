@@ -5,51 +5,37 @@ struct EditNoteSheet: View {
     let onSave: (String) -> Void
 
     @Environment(\.dismiss) private var dismiss
-    @State private var titleText: String
-    @State private var bodyText: String
-    @FocusState private var focusedField: Field?
-
-    enum Field {
-        case title, body
-    }
+    @State private var noteText: String
+    @FocusState private var isFocused: Bool
 
     init(note: Note, onSave: @escaping (String) -> Void) {
         self.note = note
         self.onSave = onSave
-
-        let lines = note.content.components(separatedBy: .newlines)
-        self._titleText = State(initialValue: lines.first ?? "")
-        self._bodyText = State(initialValue: lines.dropFirst().joined(separator: "\n"))
+        self._noteText = State(initialValue: note.content)
     }
 
-    private var combinedContent: String {
-        if bodyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            return titleText
-        }
-        return titleText + "\n" + bodyText
+    private var displayTitle: String {
+        let lines = noteText.components(separatedBy: .newlines)
+        let firstLine = lines.first?.trimmingCharacters(in: .whitespaces) ?? ""
+        return firstLine.isEmpty ? "Edit Note" : firstLine
     }
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 8) {
-                    TextField("Title", text: $titleText)
-                        .font(.title2.bold())
-                        .focused($focusedField, equals: .title)
-                        .submitLabel(.next)
-                        .onSubmit {
-                            focusedField = .body
-                        }
+            ZStack(alignment: .topLeading) {
+                StyledTextEditor(text: $noteText, onCommit: saveNote, cursorPosition: .end)
+                    .focused($isFocused)
 
-                    TextEditor(text: $bodyText)
-                        .font(.body)
-                        .scrollContentBackground(.hidden)
-                        .focused($focusedField, equals: .body)
-                        .frame(minHeight: 200)
+                if noteText.isEmpty {
+                    Text("Title")
+                        .font(.system(size: 28, weight: .bold))
+                        .foregroundStyle(.tertiary)
+                        .padding(.leading, 21)
+                        .padding(.top, 8)
+                        .allowsHitTesting(false)
                 }
-                .padding()
             }
-            .navigationTitle("Edit Note")
+            .navigationTitle(displayTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -59,22 +45,28 @@ struct EditNoteSheet: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
-                        let content = combinedContent.trimmingCharacters(in: .whitespacesAndNewlines)
-                        if !content.isEmpty {
-                            onSave(content)
-                        }
-                        dismiss()
+                        saveNote()
                     }
                     .fontWeight(.semibold)
-                    .disabled(titleText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                    .disabled(noteText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
             }
         }
         .onAppear {
-            focusedField = .title
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                isFocused = true
+            }
         }
         .presentationDetents([.large])
         .presentationDragIndicator(.visible)
+    }
+
+    private func saveNote() {
+        let content = noteText.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !content.isEmpty {
+            onSave(content)
+        }
+        dismiss()
     }
 }
 
