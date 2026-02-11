@@ -12,18 +12,30 @@ struct ContentView: View {
         case none
         case scanner
         case stackView
-        case addNote(detent: PresentationDetent)
+        case noteEditor(note: Note?, detent: PresentationDetent)
 
-        var isAddNote: Bool {
-            if case .addNote = self { return true }
+        var isNoteEditor: Bool {
+            if case .noteEditor = self { return true }
             return false
+        }
+
+        static func == (lhs: Presentation, rhs: Presentation) -> Bool {
+            switch (lhs, rhs) {
+            case (.none, .none), (.scanner, .scanner), (.stackView, .stackView):
+                return true
+            case (.noteEditor(let lNote, let lDetent), .noteEditor(let rNote, let rDetent)):
+                return lNote?.id == rNote?.id && lDetent == rDetent
+            default:
+                return false
+            }
         }
     }
 
-    @State private var presentation: Presentation = .addNote(detent: .height(72))
+    @State private var presentation: Presentation = .noteEditor(note: nil, detent: .height(72))
+    @State private var editingNote: Note?
 
-    private var addNoteDetent: PresentationDetent {
-        if case .addNote(let detent) = presentation {
+    private var editorDetent: PresentationDetent {
+        if case .noteEditor(_, let detent) = presentation {
             return detent
         }
         return .height(72)
@@ -31,10 +43,15 @@ struct ContentView: View {
 
     var body: some View {
         NavigationStack {
-            NoteListView(showStackMode: .init(
-                get: { presentation == .stackView },
-                set: { if $0 { presentation = .stackView } }
-            ))
+            NoteListView(
+                showStackMode: .init(
+                    get: { presentation == .stackView },
+                    set: { if $0 { presentation = .stackView } }
+                ),
+                onEditNote: { note in
+                    presentation = .noteEditor(note: note, detent: .large)
+                }
+            )
                 .toolbar {
                     ToolbarItem(placement: .topBarLeading) {
                         Button {
@@ -54,7 +71,7 @@ struct ContentView: View {
                 }
                 .sheet(isPresented: .init(
                     get: { presentation == .scanner },
-                    set: { if !$0 { presentation = .addNote(detent: .height(72)) } }
+                    set: { if !$0 { presentation = .noteEditor(note: nil, detent: .height(72)) } }
                 )) {
                     ScannerView()
                 }
@@ -63,7 +80,7 @@ struct ContentView: View {
                     set: { if !$0 {
                         presentation = .none
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                            presentation = .addNote(detent: .height(72))
+                            presentation = .noteEditor(note: nil, detent: .height(72))
                         }
                     } }
                 )) {
@@ -72,27 +89,52 @@ struct ContentView: View {
                         set: { if !$0 {
                             presentation = .none
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                presentation = .addNote(detent: .height(72))
+                                presentation = .noteEditor(note: nil, detent: .height(72))
                             }
                         } }
                     ))
                 }
                 .sheet(isPresented: .init(
-                    get: { presentation.isAddNote },
+                    get: { presentation.isNoteEditor },
                     set: { if !$0 { presentation = .none } }
                 )) {
-                    AddNoteSheet(onAdd: { content in
-                        addNote(content: content)
-                    }, selectedDetent: .init(
-                        get: { addNoteDetent },
-                        set: { presentation = .addNote(detent: $0) }
-                    ))
-                    .presentationDetents([.height(72), .large], selection: .init(
-                        get: { addNoteDetent },
-                        set: { presentation = .addNote(detent: $0) }
-                    ))
-                    .presentationBackgroundInteraction(.enabled(upThrough: .height(72)))
-                    .interactiveDismissDisabled()
+                    if case .noteEditor(let note, _) = presentation {
+                        NoteEditorSheet(
+                            note: note,
+                            onSave: { content in
+                                if let note = note {
+                                    updateNote(note, content: content)
+                                } else {
+                                    addNote(content: content)
+                                }
+                            },
+                            onCancel: {
+                                // Transition from edit to add mode
+                                presentation = .noteEditor(note: nil, detent: .height(72))
+                            },
+                            selectedDetent: .init(
+                                get: { editorDetent },
+                                set: { newDetent in
+                                    if case .noteEditor(let note, _) = presentation {
+                                        presentation = .noteEditor(note: note, detent: newDetent)
+                                    }
+                                }
+                            )
+                        )
+                        .presentationDetents(
+                            [.height(72), .large],
+                            selection: .init(
+                                get: { editorDetent },
+                                set: { newDetent in
+                                    if case .noteEditor(let note, _) = presentation {
+                                        presentation = .noteEditor(note: note, detent: newDetent)
+                                    }
+                                }
+                            )
+                        )
+                        .presentationBackgroundInteraction(.enabled(upThrough: .height(72)))
+                        .interactiveDismissDisabled()
+                    }
                 }
         }
         .tint(Color.themeAccent)
@@ -118,6 +160,16 @@ struct ContentView: View {
                 order: (activeNotes.last?.order ?? -1) + 1
             )
             modelContext.insert(note)
+        }
+        WidgetCenter.shared.reloadAllTimelines()
+    }
+
+    private func updateNote(_ note: Note, content: String) {
+        let trimmed = content.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+
+        withAnimation {
+            note.content = trimmed
         }
         WidgetCenter.shared.reloadAllTimelines()
     }

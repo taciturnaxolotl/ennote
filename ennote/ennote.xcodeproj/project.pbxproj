@@ -13,6 +13,7 @@
 		0BBF20102F2963D800AF0585 /* DurationPicker in Frameworks */ = {isa = PBXBuildFile; productRef = 0BBF200F2F2963D800AF0585 /* DurationPicker */; };
 		0BBF20132F297AD800AF0585 /* ConfettiSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 0BBF20122F297AD800AF0585 /* ConfettiSwiftUI */; };
 		0BCDFF592F3CDF54002A78BE /* StyledTextEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BCDFF582F3CDF54002A78BE /* StyledTextEditor.swift */; };
+		0BCDFF5B2F3D0FF3002A78BE /* NoteEditorSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BCDFF5A2F3D0FF3002A78BE /* NoteEditorSheet.swift */; };
 		A1B2C3D4E5F60001000A0001 /* ennoteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002000A0001 /* ennoteApp.swift */; };
 		A1B2C3D4E5F60001000A0002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002000A0002 /* ContentView.swift */; };
 		A1B2C3D4E5F60001000A0003 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002000A0003 /* Theme.swift */; };
@@ -66,6 +67,7 @@
 		0BBF1FFA2F28705F00AF0585 /* AddNoteSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNoteSheet.swift; sourceTree = "<group>"; };
 		0BBF1FFB2F28705F00AF0585 /* EditNoteSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditNoteSheet.swift; sourceTree = "<group>"; };
 		0BCDFF582F3CDF54002A78BE /* StyledTextEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyledTextEditor.swift; sourceTree = "<group>"; };
+		0BCDFF5A2F3D0FF3002A78BE /* NoteEditorSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteEditorSheet.swift; sourceTree = "<group>"; };
 		A1B2C3D4E5F60002000A0001 /* ennoteApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ennoteApp.swift; sourceTree = "<group>"; };
 		A1B2C3D4E5F60002000A0002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		A1B2C3D4E5F60002000A0003 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
@@ -163,6 +165,7 @@
 		A1B2C3D4E5F60009000A0005 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				0BCDFF5A2F3D0FF3002A78BE /* NoteEditorSheet.swift */,
 				0BCDFF582F3CDF54002A78BE /* StyledTextEditor.swift */,
 				0BBF1FFA2F28705F00AF0585 /* AddNoteSheet.swift */,
 				0BBF1FFB2F28705F00AF0585 /* EditNoteSheet.swift */,
@@ -332,6 +335,7 @@
 				A1B2C3D4E5F60001000A0001 /* ennoteApp.swift in Sources */,
 				A1B2C3D4E5F60001000A0002 /* ContentView.swift in Sources */,
 				0BCDFF592F3CDF54002A78BE /* StyledTextEditor.swift in Sources */,
+				0BCDFF5B2F3D0FF3002A78BE /* NoteEditorSheet.swift in Sources */,
 				A1B2C3D4E5F60001000A0003 /* Theme.swift in Sources */,
 				A1B2C3D4E5F60001000A0004 /* Note.swift in Sources */,
 				A1B2C3D4E5F60001000A0005 /* Stack.swift in Sources */,

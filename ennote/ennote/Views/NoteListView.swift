@@ -15,7 +15,7 @@ struct NoteListView: View {
     private var completedNotes: [Note]
 
     @Binding var showStackMode: Bool
-    @State private var editingNote: Note?
+    let onEditNote: (Note) -> Void
 
     var body: some View {
         List {
@@ -114,18 +114,12 @@ struct NoteListView: View {
                 }
             }
         }
-        .sheet(item: $editingNote) { note in
-            EditNoteSheet(note: note, onSave: { newContent in
-                note.content = newContent
-                WidgetCenter.shared.reloadAllTimelines()
-            })
-        }
     }
 
     // MARK: - Actions
 
     private func startEditing(_ note: Note) {
-        editingNote = note
+        onEditNote(note)
     }
 
     private func completeNote(_ note: Note) {
@@ -178,7 +172,7 @@ struct NoteListView: View {
 
 #Preview {
     NavigationStack {
-        NoteListView(showStackMode: .constant(false))
+        NoteListView(showStackMode: .constant(false), onEditNote: { _ in })
     }
     .modelContainer(for: Note.self, inMemory: true)
 }
