@@ -29,53 +29,66 @@ struct AddNoteSheet: View {
     }
 
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 8) {
-                    TextField("Title", text: $titleText)
-                        .font(.title2.bold())
-                        .focused($focusedField, equals: .title)
-                        .submitLabel(.next)
-                        .onSubmit {
-                            focusedField = .body
-                        }
+        Group {
+            if isExpanded {
+                NavigationStack {
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 8) {
+                            TextField("Title", text: $titleText)
+                                .font(.title2.bold())
+                                .focused($focusedField, equals: .title)
+                                .submitLabel(.next)
+                                .onSubmit {
+                                    focusedField = .body
+                                }
 
-                    TextEditor(text: $bodyText)
-                        .font(.body)
-                        .scrollContentBackground(.hidden)
-                        .focused($focusedField, equals: .body)
-                        .frame(minHeight: 200)
+                            TextEditor(text: $bodyText)
+                                .font(.body)
+                                .scrollContentBackground(.hidden)
+                                .focused($focusedField, equals: .body)
+                                .frame(minHeight: 200)
+                        }
+                        .padding()
+                    }
+                    .navigationTitle(addedCount > 0 ? "Add Note (\(addedCount))" : "Add Note")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("Cancel") {
+                                cancelAndClose()
+                            }
+                        }
+                        ToolbarItem(placement: .confirmationAction) {
+                            Button("Add") {
+                                submitNote()
+                            }
+                            .fontWeight(.semibold)
+                            .disabled(!hasContent)
+                        }
+                    }
                 }
-                .padding()
-            }
-            .navigationTitle(addedCount > 0 ? "Add Note (\(addedCount))" : "Add Note")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                if isExpanded {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button("Cancel") {
-                            cancelAndClose()
-                        }
-                    }
-                    ToolbarItem(placement: .confirmationAction) {
-                        Button("Add") {
-                            submitNote()
-                        }
-                        .fontWeight(.semibold)
-                        .disabled(!hasContent)
-                    }
+            } else {
+                VStack {
+                    Spacer()
+                    Text("Add Note")
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                    Spacer()
+                }
+                .frame(maxWidth: .infinity)
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    selectedDetent = .large
                 }
             }
         }
         .presentationDragIndicator(.visible)
-        .onTapGesture {
-            if !isExpanded {
-                selectedDetent = .large
-            }
-        }
+        .presentationContentInteraction(.scrolls)
         .onChange(of: isExpanded) { _, expanded in
             if expanded {
                 focusedField = .title
+            } else {
+                focusedField = nil
             }
         }
     }

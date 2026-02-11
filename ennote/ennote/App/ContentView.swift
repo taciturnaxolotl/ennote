@@ -8,18 +8,37 @@ struct ContentView: View {
            sort: \Note.order)
     private var activeNotes: [Note]
 
-    @State private var showScanner = false
-    @State private var showStackMode = false
-    @State private var showAddSheet = false
-    @State private var selectedDetent: PresentationDetent = .height(72)
+    enum Presentation: Equatable {
+        case none
+        case scanner
+        case stackView
+        case addNote(detent: PresentationDetent)
+
+        var isAddNote: Bool {
+            if case .addNote = self { return true }
+            return false
+        }
+    }
+
+    @State private var presentation: Presentation = .addNote(detent: .height(72))
+
+    private var addNoteDetent: PresentationDetent {
+        if case .addNote(let detent) = presentation {
+            return detent
+        }
+        return .height(72)
+    }
 
     var body: some View {
         NavigationStack {
-            NoteListView(showStackMode: $showStackMode)
+            NoteListView(showStackMode: .init(
+                get: { presentation == .stackView },
+                set: { if $0 { presentation = .stackView } }
+            ))
                 .toolbar {
                     ToolbarItem(placement: .topBarLeading) {
                         Button {
-                            showScanner = true
+                            presentation = .scanner
                         } label: {
                             Image(systemName: "qrcode.viewfinder")
                         }
@@ -27,46 +46,56 @@ struct ContentView: View {
 
                     ToolbarItem(placement: .topBarTrailing) {
                         Button {
-                            showStackMode = true
+                            presentation = .stackView
                         } label: {
                             Image(systemName: "rectangle.stack.fill")
                         }
                     }
                 }
-                .sheet(isPresented: $showScanner) {
+                .sheet(isPresented: .init(
+                    get: { presentation == .scanner },
+                    set: { if !$0 { presentation = .addNote(detent: .height(72)) } }
+                )) {
                     ScannerView()
                 }
-                .fullScreenCover(isPresented: $showStackMode) {
-                    StackView(isPresented: $showStackMode)
+                .fullScreenCover(isPresented: .init(
+                    get: { presentation == .stackView },
+                    set: { if !$0 {
+                        presentation = .none
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            presentation = .addNote(detent: .height(72))
+                        }
+                    } }
+                )) {
+                    StackView(isPresented: .init(
+                        get: { presentation == .stackView },
+                        set: { if !$0 {
+                            presentation = .none
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                presentation = .addNote(detent: .height(72))
+                            }
+                        } }
+                    ))
                 }
-                .sheet(isPresented: $showAddSheet) {
+                .sheet(isPresented: .init(
+                    get: { presentation.isAddNote },
+                    set: { if !$0 { presentation = .none } }
+                )) {
                     AddNoteSheet(onAdd: { content in
                         addNote(content: content)
-                    }, selectedDetent: $selectedDetent)
-                    .presentationDetents([.height(72), .large], selection: $selectedDetent)
+                    }, selectedDetent: .init(
+                        get: { addNoteDetent },
+                        set: { presentation = .addNote(detent: $0) }
+                    ))
+                    .presentationDetents([.height(72), .large], selection: .init(
+                        get: { addNoteDetent },
+                        set: { presentation = .addNote(detent: $0) }
+                    ))
                     .presentationBackgroundInteraction(.enabled(upThrough: .height(72)))
                     .interactiveDismissDisabled()
                 }
         }
         .tint(Color.themeAccent)
-        .onAppear {
-            showAddSheet = true
-        }
-        .onChange(of: showStackMode) { _, isShowing in
-            if isShowing {
-                showAddSheet = false
-            } else {
-                selectedDetent = .height(72)
-                showAddSheet = true
-            }
-        }
-        .onChange(of: showScanner) { _, isShowing in
-            if isShowing {
-                showAddSheet = false
-            } else {
-                showAddSheet = true
-            }
-        }
         .onOpenURL { url in
             handleDeepLink(url)
         }
