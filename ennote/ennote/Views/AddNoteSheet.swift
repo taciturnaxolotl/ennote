@@ -50,7 +50,7 @@ struct AddNoteSheet: View {
                         }
                         .padding()
                     }
-                    .navigationTitle(addedCount > 0 ? "Add Note (\(addedCount))" : "Add Note")
+                    .navigationTitle(addedCount > 0 ? "New Note (\(addedCount))" : "New Note")
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {
@@ -59,7 +59,7 @@ struct AddNoteSheet: View {
                             }
                         }
                         ToolbarItem(placement: .confirmationAction) {
-                            Button("Add") {
+                            Button("Save") {
                                 submitNote()
                             }
                             .fontWeight(.semibold)
@@ -70,7 +70,7 @@ struct AddNoteSheet: View {
             } else {
                 VStack {
                     Spacer()
-                    Text("Add Note")
+                    Text("New Note")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                     Spacer()
@@ -86,9 +86,13 @@ struct AddNoteSheet: View {
         .presentationContentInteraction(.scrolls)
         .onChange(of: isExpanded) { _, expanded in
             if expanded {
-                focusedField = .title
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                    focusedField = .title
+                }
             } else {
                 focusedField = nil
+                // Reset counter when sheet closes
+                addedCount = 0
             }
         }
     }
