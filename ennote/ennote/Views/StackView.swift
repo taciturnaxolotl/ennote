@@ -205,7 +205,7 @@ struct StackView: View {
             Button {
                 completeCurrentNote()
             } label: {
-                Image(systemName: "checkmark.circle.fill")
+                Image(systemName: "circle.inset.filled")
                     .font(.system(size: 56))
                     .foregroundStyle(Color.themeAccent)
             }
@@ -219,7 +219,7 @@ struct StackView: View {
             Spacer()
             
             // Success icon
-            Image(systemName: "checkmark.circle.fill")
+            Image(systemName: "circle.inset.filled")
                 .font(.system(size: 72))
                 .foregroundStyle(Color.success)
                 .symbolEffect(.bounce, value: confettiCounter)

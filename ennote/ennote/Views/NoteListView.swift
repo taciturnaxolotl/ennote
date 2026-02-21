@@ -2,7 +2,7 @@ import SwiftUI
 import SwiftData
 import WidgetKit
 
-private let toggleDwellTime: TimeInterval = 0.65
+private let toggleDwellTime: TimeInterval = 5
 
 struct NoteListView: View {
     @Environment(\.modelContext) private var modelContext
@@ -16,6 +16,8 @@ struct NoteListView: View {
 
     @Binding var showStackMode: Bool
     let onEditNote: (Note) -> Void
+
+    @State private var pendingCompletions: [UUID: Task<Void, Never>] = [:]
 
     var body: some View {
         List {
@@ -127,13 +129,22 @@ struct NoteListView: View {
     }
 
     private func completeNote(_ note: Note) {
-        Task {
+        if let existing = pendingCompletions[note.id] {
+            existing.cancel()
+            pendingCompletions.removeValue(forKey: note.id)
+            return
+        }
+
+        let task = Task {
             try? await Task.sleep(for: .seconds(toggleDwellTime))
+            guard !Task.isCancelled else { return }
             withAnimation(.snappy(duration: 0.25)) {
                 note.complete()
             }
+            pendingCompletions.removeValue(forKey: note.id)
             WidgetCenter.shared.reloadAllTimelines()
         }
+        pendingCompletions[note.id] = task
     }
 
     private func uncompleteNote(_ note: Note) {

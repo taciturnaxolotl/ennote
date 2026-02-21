@@ -30,14 +30,14 @@ struct NoteRow: View {
                 bounceToggle.toggle()
                 onToggle?()
             } label: {
-                Image(systemName: showCompleted ? "checkmark.circle.fill" : "circle")
+                Image(systemName: showCompleted ? "circle.inset.filled" : "circle")
                     .foregroundStyle(showCompleted ? Color.themeAccent : .secondary)
                     .font(.title3)
                     .contentTransition(.symbolEffect(.replace))
                     .symbolEffect(.bounce, value: bounceToggle)
             }
             .buttonStyle(.plain)
-            .sensoryFeedback(.impact(flexibility: .soft, intensity: 0.6), trigger: bounceToggle)
+            .sensoryFeedback(.impact(weight: .heavy, intensity: 0.7), trigger: bounceToggle)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
