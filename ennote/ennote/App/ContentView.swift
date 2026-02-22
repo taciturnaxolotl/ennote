@@ -10,7 +10,6 @@ struct ContentView: View {
 
     enum SheetType: Equatable {
         case none
-        case scanner
         case noteEditor(note: Note?, detent: PresentationDetent)
 
         var isNoteEditor: Bool {
@@ -20,7 +19,7 @@ struct ContentView: View {
 
         static func == (lhs: SheetType, rhs: SheetType) -> Bool {
             switch (lhs, rhs) {
-            case (.none, .none), (.scanner, .scanner):
+            case (.none, .none):
                 return true
             case (.noteEditor(let lNote, let lDetent), .noteEditor(let rNote, let rDetent)):
                 return lNote?.id == rNote?.id && lDetent == rDetent
@@ -49,14 +48,6 @@ struct ContentView: View {
                 }
             )
                 .toolbar {
-                    ToolbarItem(placement: .topBarLeading) {
-                        Button {
-                            sheetType = .scanner
-                        } label: {
-                            Image(systemName: "qrcode.viewfinder")
-                        }
-                    }
-
                     ToolbarItem(placement: .topBarTrailing) {
                         Button {
                             showStackView = true
@@ -64,12 +55,6 @@ struct ContentView: View {
                             Image(systemName: "rectangle.stack.fill")
                         }
                     }
-                }
-                .sheet(isPresented: .init(
-                    get: { sheetType == .scanner },
-                    set: { if !$0 { sheetType = .noteEditor(note: nil, detent: .height(72)) } }
-                )) {
-                    ScannerView()
                 }
                 .fullScreenCover(isPresented: $showStackView) {
                     StackView(isPresented: $showStackView)
