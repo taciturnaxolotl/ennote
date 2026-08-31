@@ -12,17 +12,6 @@ struct NoteRow: View {
         visualCompleted ?? note.isCompleted
     }
 
-    private var title: String {
-        note.content.components(separatedBy: .newlines).first ?? note.content
-    }
-
-    private var bodyText: String? {
-        let lines = note.content.components(separatedBy: .newlines)
-        guard lines.count > 1 else { return nil }
-        let rest = lines.dropFirst().joined(separator: " ").trimmingCharacters(in: .whitespaces)
-        return rest.isEmpty ? nil : rest
-    }
-
     var body: some View {
         HStack(spacing: 12) {
             Button {
@@ -37,30 +26,33 @@ struct NoteRow: View {
                     .symbolEffect(.bounce, value: bounceToggle)
             }
             .buttonStyle(.plain)
+            .accessibilityLabel(showCompleted ? "Mark as not done" : "Mark as done")
             .sensoryFeedback(.impact(weight: .heavy, intensity: 0.7), trigger: bounceToggle)
 
-            VStack(alignment: .leading, spacing: 2) {
-                Text(title)
-                    .font(.body)
-                    .fontWeight(.medium)
-                    .foregroundStyle(showCompleted ? .tertiary : .primary)
-                    .lineLimit(1)
-
-                if let body = bodyText {
-                    Text(body)
-                        .font(.subheadline)
-                        .foregroundStyle(showCompleted ? .quaternary : .secondary)
+            Button {
+                onEdit?()
+            } label: {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(note.title)
+                        .font(.body)
+                        .fontWeight(.medium)
+                        .foregroundStyle(showCompleted ? .tertiary : .primary)
                         .lineLimit(1)
-                }
-            }
 
-            Spacer()
+                    if let subtitle = note.subtitle {
+                        Text(subtitle)
+                            .font(.subheadline)
+                            .foregroundStyle(showCompleted ? .quaternary : .secondary)
+                            .lineLimit(1)
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .contentShape(.rect)
+            }
+            .buttonStyle(.plain)
+            .accessibilityHint("Opens the note for editing")
         }
         .padding(.vertical, 4)
-        .contentShape(Rectangle())
-        .onTapGesture {
-            onEdit?()
-        }
         .onChange(of: note.isCompleted) {
             visualCompleted = nil
         }
@@ -70,7 +62,7 @@ struct NoteRow: View {
 #Preview {
     List {
         NoteRow(note: Note(content: "Review PR for auth flow"))
-        NoteRow(note: Note(content: "Update dependencies"))
+        NoteRow(note: Note(content: "Update dependencies\nBump to the 2026 toolchain"))
         NoteRow(note: Note(content: "Write tests for sync", isCompleted: true))
     }
 }

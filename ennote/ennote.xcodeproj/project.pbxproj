@@ -3,59 +3,31 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0BBF1FF32F281DA900AF0585 /* ennote.icon in Resources */ = {isa = PBXBuildFile; fileRef = 0BBF1FF22F281DA900AF0585 /* ennote.icon */; };
-		0BBF1FFC2F28705F00AF0585 /* EditNoteSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBF1FFB2F28705F00AF0585 /* EditNoteSheet.swift */; };
-		0BBF1FFD2F28705F00AF0585 /* AddNoteSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BBF1FFA2F28705F00AF0585 /* AddNoteSheet.swift */; };
-		0BBF20102F2963D800AF0585 /* DurationPicker in Frameworks */ = {isa = PBXBuildFile; productRef = 0BBF200F2F2963D800AF0585 /* DurationPicker */; };
-		0BBF20132F297AD800AF0585 /* ConfettiSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 0BBF20122F297AD800AF0585 /* ConfettiSwiftUI */; };
-		0BCDFF592F3CDF54002A78BE /* StyledTextEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BCDFF582F3CDF54002A78BE /* StyledTextEditor.swift */; };
-		0BCDFF5B2F3D0FF3002A78BE /* NoteEditorSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0BCDFF5A2F3D0FF3002A78BE /* NoteEditorSheet.swift */; };
-		A1B2C3D4E5F60001000A0001 /* ennoteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002000A0001 /* ennoteApp.swift */; };
-		A1B2C3D4E5F60001000A0002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002000A0002 /* ContentView.swift */; };
-		A1B2C3D4E5F60001000A0003 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002000A0003 /* Theme.swift */; };
-		A1B2C3D4E5F60001000A0004 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002000A0004 /* Note.swift */; };
-		A1B2C3D4E5F60001000A0005 /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002000A0005 /* Stack.swift */; };
-		A1B2C3D4E5F60001000A0006 /* NoteListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002000A0006 /* NoteListView.swift */; };
-		A1B2C3D4E5F60001000A0007 /* NoteRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002000A0007 /* NoteRow.swift */; };
-		A1B2C3D4E5F60001000A0008 /* AddNoteField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002000A0008 /* AddNoteField.swift */; };
-		A1B2C3D4E5F60001000A0009 /* StackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002000A0009 /* StackView.swift */; };
-		A1B2C3D4E5F60001000A0010 /* ScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002000A0010 /* ScannerView.swift */; };
-		A1B2C3D4E5F60001000A0011 /* CloudKitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002000A0011 /* CloudKitService.swift */; };
-		A1B2C3D4E5F60001000A0012 /* NoteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002000A0012 /* NoteStore.swift */; };
-		A1B2C3D4E5F60001000A0013 /* AppGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002000A0013 /* AppGroup.swift */; };
-		A1B2C3D4E5F60001000A0014 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002000A0014 /* Assets.xcassets */; };
-		A1B2C3D4E5F60001000B0001 /* ennoteWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002000B0001 /* ennoteWidget.swift */; };
-		A1B2C3D4E5F60001000B0002 /* InteractiveWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002000B0002 /* InteractiveWidget.swift */; };
-		A1B2C3D4E5F60001000B0003 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002000B0003 /* Assets.xcassets */; };
-		A1B2C3D4E5F60001000B0004 /* AppGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002000A0013 /* AppGroup.swift */; };
-		A1B2C3D4E5F60001000B0005 /* Note.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002000A0004 /* Note.swift */; };
-		A1B2C3D4E5F60001000B0006 /* NoteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002000A0012 /* NoteStore.swift */; };
-		A1B2C3D4E5F60001000B0007 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60002000A0003 /* Theme.swift */; };
-		A1B2C3D4E5F60001000C0001 /* ennoteWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60003000B0001 /* ennoteWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		E0000000000000000000A001 /* ennoteWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = E0000000000000000000B002 /* ennoteWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		A1B2C3D4E5F60004000A0001 /* PBXContainerItemProxy */ = {
+		E0000000000000000000C001 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = A1B2C3D4E5F60005000A0001 /* Project object */;
+			containerPortal = E0000000000000000000D001 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = A1B2C3D4E5F60006000B0001;
+			remoteGlobalIDString = E0000000000000000000E002;
 			remoteInfo = ennoteWidgetExtension;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		A1B2C3D4E5F60007000A0001 /* Embed Foundation Extensions */ = {
+		E0000000000000000000F001 /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				A1B2C3D4E5F60001000C0001 /* ennoteWidgetExtension.appex in Embed Foundation Extensions */,
+				E0000000000000000000A001 /* ennoteWidgetExtension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -63,47 +35,37 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0BBF1FF22F281DA900AF0585 /* ennote.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = ennote.icon; sourceTree = "<group>"; };
-		0BBF1FFA2F28705F00AF0585 /* AddNoteSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNoteSheet.swift; sourceTree = "<group>"; };
-		0BBF1FFB2F28705F00AF0585 /* EditNoteSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditNoteSheet.swift; sourceTree = "<group>"; };
-		0BCDFF582F3CDF54002A78BE /* StyledTextEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyledTextEditor.swift; sourceTree = "<group>"; };
-		0BCDFF5A2F3D0FF3002A78BE /* NoteEditorSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteEditorSheet.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60002000A0001 /* ennoteApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ennoteApp.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60002000A0002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60002000A0003 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60002000A0004 /* Note.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Note.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60002000A0005 /* Stack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60002000A0006 /* NoteListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteListView.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60002000A0007 /* NoteRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteRow.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60002000A0008 /* AddNoteField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNoteField.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60002000A0009 /* StackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackView.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60002000A0010 /* ScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerView.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60002000A0011 /* CloudKitService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitService.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60002000A0012 /* NoteStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteStore.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60002000A0013 /* AppGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppGroup.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60002000A0014 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		A1B2C3D4E5F60002000A0015 /* ennote.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ennote.entitlements; sourceTree = "<group>"; };
-		A1B2C3D4E5F60002000A0016 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A1B2C3D4E5F60002000B0001 /* ennoteWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ennoteWidget.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60002000B0002 /* InteractiveWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractiveWidget.swift; sourceTree = "<group>"; };
-		A1B2C3D4E5F60002000B0003 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		A1B2C3D4E5F60002000B0004 /* ennoteWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ennoteWidgetExtension.entitlements; sourceTree = "<group>"; };
-		A1B2C3D4E5F60002000B0005 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A1B2C3D4E5F60003000A0001 /* ennote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ennote.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A1B2C3D4E5F60003000B0001 /* ennoteWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ennoteWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		E0000000000000000000B001 /* ennote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ennote.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E0000000000000000000B002 /* ennoteWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ennoteWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		E00000000000000000001001 /* Shared */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		E00000000000000000001002 /* ennote */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = ennote;
+			sourceTree = "<group>";
+		};
+		E00000000000000000001003 /* ennoteWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = ennoteWidget;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
-		A1B2C3D4E5F60008000A0001 /* Frameworks */ = {
+		E00000000000000000002001 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0BBF20132F297AD800AF0585 /* ConfettiSwiftUI in Frameworks */,
-				0BBF20102F2963D800AF0585 /* DurationPicker in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A1B2C3D4E5F60008000B0001 /* Frameworks */ = {
+		E00000000000000000002002 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -113,116 +75,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0BBF200E2F2963D800AF0585 /* Frameworks */ = {
+		E00000000000000000003001 = {
 			isa = PBXGroup;
 			children = (
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		A1B2C3D4E5F60009000A0001 = {
-			isa = PBXGroup;
-			children = (
-				A1B2C3D4E5F60009000A0002 /* ennote */,
-				A1B2C3D4E5F60009000B0001 /* ennoteWidget */,
-				A1B2C3D4E5F60009000C0001 /* Shared */,
-				0BBF200E2F2963D800AF0585 /* Frameworks */,
-				A1B2C3D4E5F60009000D0001 /* Products */,
+				E00000000000000000001001 /* Shared */,
+				E00000000000000000001002 /* ennote */,
+				E00000000000000000001003 /* ennoteWidget */,
+				E00000000000000000003002 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		A1B2C3D4E5F60009000A0002 /* ennote */ = {
+		E00000000000000000003002 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A1B2C3D4E5F60009000A0003 /* App */,
-				A1B2C3D4E5F60009000A0004 /* Models */,
-				A1B2C3D4E5F60009000A0005 /* Views */,
-				A1B2C3D4E5F60009000A0006 /* Services */,
-				A1B2C3D4E5F60009000A0007 /* Resources */,
-			);
-			path = ennote;
-			sourceTree = "<group>";
-		};
-		A1B2C3D4E5F60009000A0003 /* App */ = {
-			isa = PBXGroup;
-			children = (
-				A1B2C3D4E5F60002000A0001 /* ennoteApp.swift */,
-				A1B2C3D4E5F60002000A0002 /* ContentView.swift */,
-				A1B2C3D4E5F60002000A0003 /* Theme.swift */,
-			);
-			path = App;
-			sourceTree = "<group>";
-		};
-		A1B2C3D4E5F60009000A0004 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				A1B2C3D4E5F60002000A0004 /* Note.swift */,
-				A1B2C3D4E5F60002000A0005 /* Stack.swift */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
-		A1B2C3D4E5F60009000A0005 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				0BCDFF5A2F3D0FF3002A78BE /* NoteEditorSheet.swift */,
-				0BCDFF582F3CDF54002A78BE /* StyledTextEditor.swift */,
-				0BBF1FFA2F28705F00AF0585 /* AddNoteSheet.swift */,
-				0BBF1FFB2F28705F00AF0585 /* EditNoteSheet.swift */,
-				A1B2C3D4E5F60002000A0006 /* NoteListView.swift */,
-				A1B2C3D4E5F60002000A0007 /* NoteRow.swift */,
-				A1B2C3D4E5F60002000A0008 /* AddNoteField.swift */,
-				A1B2C3D4E5F60002000A0009 /* StackView.swift */,
-				A1B2C3D4E5F60002000A0010 /* ScannerView.swift */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
-		A1B2C3D4E5F60009000A0006 /* Services */ = {
-			isa = PBXGroup;
-			children = (
-				A1B2C3D4E5F60002000A0011 /* CloudKitService.swift */,
-				A1B2C3D4E5F60002000A0012 /* NoteStore.swift */,
-			);
-			path = Services;
-			sourceTree = "<group>";
-		};
-		A1B2C3D4E5F60009000A0007 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				0BBF1FF22F281DA900AF0585 /* ennote.icon */,
-				A1B2C3D4E5F60002000A0014 /* Assets.xcassets */,
-				A1B2C3D4E5F60002000A0015 /* ennote.entitlements */,
-				A1B2C3D4E5F60002000A0016 /* Info.plist */,
-			);
-			path = Resources;
-			sourceTree = "<group>";
-		};
-		A1B2C3D4E5F60009000B0001 /* ennoteWidget */ = {
-			isa = PBXGroup;
-			children = (
-				A1B2C3D4E5F60002000B0001 /* ennoteWidget.swift */,
-				A1B2C3D4E5F60002000B0002 /* InteractiveWidget.swift */,
-				A1B2C3D4E5F60002000B0003 /* Assets.xcassets */,
-				A1B2C3D4E5F60002000B0004 /* ennoteWidgetExtension.entitlements */,
-				A1B2C3D4E5F60002000B0005 /* Info.plist */,
-			);
-			path = ennoteWidget;
-			sourceTree = "<group>";
-		};
-		A1B2C3D4E5F60009000C0001 /* Shared */ = {
-			isa = PBXGroup;
-			children = (
-				A1B2C3D4E5F60002000A0013 /* AppGroup.swift */,
-			);
-			path = Shared;
-			sourceTree = "<group>";
-		};
-		A1B2C3D4E5F60009000D0001 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				A1B2C3D4E5F60003000A0001 /* ennote.app */,
-				A1B2C3D4E5F60003000B0001 /* ennoteWidgetExtension.appex */,
+				E0000000000000000000B001 /* ennote.app */,
+				E0000000000000000000B002 /* ennoteWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -230,191 +97,154 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		A1B2C3D4E5F60006000A0001 /* ennote */ = {
+		E0000000000000000000E001 /* ennote */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A1B2C3D4E5F6000B000A0001 /* Build configuration list for PBXNativeTarget "ennote" */;
+			buildConfigurationList = E00000000000000000004001 /* Build configuration list for PBXNativeTarget "ennote" */;
 			buildPhases = (
-				A1B2C3D4E5F6000A000A0001 /* Sources */,
-				A1B2C3D4E5F60008000A0001 /* Frameworks */,
-				A1B2C3D4E5F6000A000A0002 /* Resources */,
-				A1B2C3D4E5F60007000A0001 /* Embed Foundation Extensions */,
+				E00000000000000000005001 /* Sources */,
+				E00000000000000000002001 /* Frameworks */,
+				E00000000000000000006001 /* Resources */,
+				E0000000000000000000F001 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				A1B2C3D4E5F6000C000A0001 /* PBXTargetDependency */,
+				E00000000000000000007001 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				E00000000000000000001001 /* Shared */,
+				E00000000000000000001002 /* ennote */,
 			);
 			name = ennote;
 			productName = ennote;
-			productReference = A1B2C3D4E5F60003000A0001 /* ennote.app */;
+			productReference = E0000000000000000000B001 /* ennote.app */;
 			productType = "com.apple.product-type.application";
 		};
-		A1B2C3D4E5F60006000B0001 /* ennoteWidgetExtension */ = {
+		E0000000000000000000E002 /* ennoteWidgetExtension */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A1B2C3D4E5F6000B000B0001 /* Build configuration list for PBXNativeTarget "ennoteWidgetExtension" */;
+			buildConfigurationList = E00000000000000000004002 /* Build configuration list for PBXNativeTarget "ennoteWidgetExtension" */;
 			buildPhases = (
-				A1B2C3D4E5F6000A000B0001 /* Sources */,
-				A1B2C3D4E5F60008000B0001 /* Frameworks */,
-				A1B2C3D4E5F6000A000B0002 /* Resources */,
+				E00000000000000000005002 /* Sources */,
+				E00000000000000000002002 /* Frameworks */,
+				E00000000000000000006002 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
+			fileSystemSynchronizedGroups = (
+				E00000000000000000001001 /* Shared */,
+				E00000000000000000001003 /* ennoteWidget */,
+			);
 			name = ennoteWidgetExtension;
 			productName = ennoteWidgetExtension;
-			productReference = A1B2C3D4E5F60003000B0001 /* ennoteWidgetExtension.appex */;
+			productReference = E0000000000000000000B002 /* ennoteWidgetExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		A1B2C3D4E5F60005000A0001 /* Project object */ = {
+		E0000000000000000000D001 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1500;
-				LastUpgradeCheck = 2620;
+				LastSwiftUpdateCheck = 2660;
+				LastUpgradeCheck = 2660;
 				TargetAttributes = {
-					A1B2C3D4E5F60006000A0001 = {
+					E0000000000000000000E001 = {
 						CreatedOnToolsVersion = 15.0;
 					};
-					A1B2C3D4E5F60006000B0001 = {
+					E0000000000000000000E002 = {
 						CreatedOnToolsVersion = 15.0;
 					};
 				};
 			};
-			buildConfigurationList = A1B2C3D4E5F6000B000C0001 /* Build configuration list for PBXProject "ennote" */;
-			compatibilityVersion = "Xcode 14.0";
+			buildConfigurationList = E00000000000000000004003 /* Build configuration list for PBXProject "ennote" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
 			);
-			mainGroup = A1B2C3D4E5F60009000A0001;
-			packageReferences = (
-				0BBF20002F2962F300AF0585 /* XCRemoteSwiftPackageReference "DurationPicker" */,
-				0BBF20112F297ACE00AF0585 /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */,
-			);
-			productRefGroup = A1B2C3D4E5F60009000D0001 /* Products */;
+			mainGroup = E00000000000000000003001;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = E00000000000000000003002 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				A1B2C3D4E5F60006000A0001 /* ennote */,
-				A1B2C3D4E5F60006000B0001 /* ennoteWidgetExtension */,
+				E0000000000000000000E001 /* ennote */,
+				E0000000000000000000E002 /* ennoteWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		A1B2C3D4E5F6000A000A0002 /* Resources */ = {
+		E00000000000000000006001 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A1B2C3D4E5F60001000A0014 /* Assets.xcassets in Resources */,
-				0BBF1FF32F281DA900AF0585 /* ennote.icon in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A1B2C3D4E5F6000A000B0002 /* Resources */ = {
+		E00000000000000000006002 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A1B2C3D4E5F60001000B0003 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		A1B2C3D4E5F6000A000A0001 /* Sources */ = {
+		E00000000000000000005001 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A1B2C3D4E5F60001000A0001 /* ennoteApp.swift in Sources */,
-				A1B2C3D4E5F60001000A0002 /* ContentView.swift in Sources */,
-				0BCDFF592F3CDF54002A78BE /* StyledTextEditor.swift in Sources */,
-				0BCDFF5B2F3D0FF3002A78BE /* NoteEditorSheet.swift in Sources */,
-				A1B2C3D4E5F60001000A0003 /* Theme.swift in Sources */,
-				A1B2C3D4E5F60001000A0004 /* Note.swift in Sources */,
-				A1B2C3D4E5F60001000A0005 /* Stack.swift in Sources */,
-				A1B2C3D4E5F60001000A0006 /* NoteListView.swift in Sources */,
-				A1B2C3D4E5F60001000A0007 /* NoteRow.swift in Sources */,
-				A1B2C3D4E5F60001000A0008 /* AddNoteField.swift in Sources */,
-				0BBF1FFC2F28705F00AF0585 /* EditNoteSheet.swift in Sources */,
-				0BBF1FFD2F28705F00AF0585 /* AddNoteSheet.swift in Sources */,
-				A1B2C3D4E5F60001000A0009 /* StackView.swift in Sources */,
-				A1B2C3D4E5F60001000A0010 /* ScannerView.swift in Sources */,
-				A1B2C3D4E5F60001000A0011 /* CloudKitService.swift in Sources */,
-				A1B2C3D4E5F60001000A0012 /* NoteStore.swift in Sources */,
-				A1B2C3D4E5F60001000A0013 /* AppGroup.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A1B2C3D4E5F6000A000B0001 /* Sources */ = {
+		E00000000000000000005002 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A1B2C3D4E5F60001000B0001 /* ennoteWidget.swift in Sources */,
-				A1B2C3D4E5F60001000B0002 /* InteractiveWidget.swift in Sources */,
-				A1B2C3D4E5F60001000B0004 /* AppGroup.swift in Sources */,
-				A1B2C3D4E5F60001000B0005 /* Note.swift in Sources */,
-				A1B2C3D4E5F60001000B0006 /* NoteStore.swift in Sources */,
-				A1B2C3D4E5F60001000B0007 /* Theme.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		A1B2C3D4E5F6000C000A0001 /* PBXTargetDependency */ = {
+		E00000000000000000007001 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = A1B2C3D4E5F60006000B0001 /* ennoteWidgetExtension */;
-			targetProxy = A1B2C3D4E5F60004000A0001 /* PBXContainerItemProxy */;
+			target = E0000000000000000000E002 /* ennoteWidgetExtension */;
+			targetProxy = E0000000000000000000C001 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		A1B2C3D4E5F6000D000A0001 /* Debug */ = {
+		E00000000000000000008001 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -422,13 +252,10 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -436,68 +263,57 @@
 				SDKROOT = iphoneos;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
 			};
 			name = Debug;
 		};
-		A1B2C3D4E5F6000D000A0002 /* Release */ = {
+		E00000000000000000008002 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
-		A1B2C3D4E5F6000D000B0001 /* Debug */ = {
+		E00000000000000000009001 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = ennote;
@@ -509,11 +325,9 @@
 				DEVELOPMENT_TEAM = M67B42LX8D;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ennote/Resources/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ennote;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
-				INFOPLIST_KEY_NSCameraUsageDescription = "Camera access is needed to scan QR codes for importing notes.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -526,14 +340,12 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = sh.dunkirk.ennote.beta;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		A1B2C3D4E5F6000D000B0002 /* Release */ = {
+		E00000000000000000009002 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = ennote;
@@ -545,11 +357,9 @@
 				DEVELOPMENT_TEAM = M67B42LX8D;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ennote/Resources/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ennote;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
-				INFOPLIST_KEY_NSCameraUsageDescription = "Camera access is needed to scan QR codes for importing notes.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -562,14 +372,12 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = sh.dunkirk.ennote.beta;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
-		A1B2C3D4E5F6000D000C0001 /* Debug */ = {
+		E0000000000000000000A002 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -580,9 +388,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = M67B42LX8D;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ennoteWidget/Info.plist;
+				INFOPLIST_FILE = "ennoteWidget-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "ennote Widget";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -591,15 +398,13 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = sh.dunkirk.ennote.beta.widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		A1B2C3D4E5F6000D000C0002 /* Release */ = {
+		E0000000000000000000A003 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -610,9 +415,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = M67B42LX8D;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ennoteWidget/Info.plist;
+				INFOPLIST_FILE = "ennoteWidget-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "ennote Widget";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -621,10 +425,8 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = sh.dunkirk.ennote.beta.widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -632,66 +434,34 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		A1B2C3D4E5F6000B000A0001 /* Build configuration list for PBXNativeTarget "ennote" */ = {
+		E00000000000000000004001 /* Build configuration list for PBXNativeTarget "ennote" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				A1B2C3D4E5F6000D000B0001 /* Debug */,
-				A1B2C3D4E5F6000D000B0002 /* Release */,
+				E00000000000000000009001 /* Debug */,
+				E00000000000000000009002 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A1B2C3D4E5F6000B000B0001 /* Build configuration list for PBXNativeTarget "ennoteWidgetExtension" */ = {
+		E00000000000000000004002 /* Build configuration list for PBXNativeTarget "ennoteWidgetExtension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				A1B2C3D4E5F6000D000C0001 /* Debug */,
-				A1B2C3D4E5F6000D000C0002 /* Release */,
+				E0000000000000000000A002 /* Debug */,
+				E0000000000000000000A003 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A1B2C3D4E5F6000B000C0001 /* Build configuration list for PBXProject "ennote" */ = {
+		E00000000000000000004003 /* Build configuration list for PBXProject "ennote" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				A1B2C3D4E5F6000D000A0001 /* Debug */,
-				A1B2C3D4E5F6000D000A0002 /* Release */,
+				E00000000000000000008001 /* Debug */,
+				E00000000000000000008002 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		0BBF20002F2962F300AF0585 /* XCRemoteSwiftPackageReference "DurationPicker" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/mac-gallagher/DurationPicker.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.2;
-			};
-		};
-		0BBF20112F297ACE00AF0585 /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/simibac/ConfettiSwiftUI.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 3.0.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		0BBF200F2F2963D800AF0585 /* DurationPicker */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0BBF20002F2962F300AF0585 /* XCRemoteSwiftPackageReference "DurationPicker" */;
-			productName = DurationPicker;
-		};
-		0BBF20122F297AD800AF0585 /* ConfettiSwiftUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0BBF20112F297ACE00AF0585 /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */;
-			productName = ConfettiSwiftUI;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
-	rootObject = A1B2C3D4E5F60005000A0001 /* Project object */;
+	rootObject = E0000000000000000000D001 /* Project object */;
 }

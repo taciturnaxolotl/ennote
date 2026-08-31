@@ -6,9 +6,9 @@ Documentation for AI agents working in the ennote codebase.
 
 ## Project Overview
 
-**enɳoté** (pronounced: en-no-TAY) is a Stack-inspired micro-note app for quick capture and focused execution. Built with Swift/SwiftUI for iOS with a companion web app for desktop note preparation.
+**enɳoté** (pronounced: en-no-TAY) is a Stack-inspired micro-note app for quick capture and focused execution. Built with Swift/SwiftUI for iOS.
 
-**Philosophy**: Break tasks into micro-notes. Prepare on desktop, execute on phone. Notes are ephemeral by design—captured quickly, completed quickly, then gone.
+**Philosophy**: Break tasks into micro-notes. Notes are ephemeral by design—captured quickly, completed quickly, then gone.
 
 ---
 
@@ -16,42 +16,31 @@ Documentation for AI agents working in the ennote codebase.
 
 ```
 ennote/
-├── web/                              # Vanilla HTML/CSS/JS web app
-│   ├── app.js                        # QR stack creation logic
-│   ├── index.html                    # Single-page desktop interface
-│   └── styles.css                    # Dark theme styling
 ├── ennote/                           # Xcode project root
-│   ├── ennote/                       # Main iOS app
-│   │   ├── App/                      # App entry and global state
-│   │   │   ├── ennoteApp.swift       # @main entry point, SwiftData setup
-│   │   │   ├── ContentView.swift     # Root view with tab/mode switching
-│   │   │   └── Theme.swift           # Color palette and styling constants
-│   │   ├── Models/                   # Data models
-│   │   │   ├── Note.swift            # @Model SwiftData note entity
-│   │   │   └── Stack.swift           # CloudKit QR transfer model
-│   │   ├── Views/                    # SwiftUI views
-│   │   │   ├── NoteListView.swift    # Main list view with @Query
-│   │   │   ├── NoteRow.swift         # Individual note with swipe actions
-│   │   │   ├── AddNoteField.swift    # Quick-add input field
-│   │   │   ├── AddNoteSheet.swift    # Modal for adding notes
-│   │   │   ├── EditNoteSheet.swift   # Modal for editing notes
-│   │   │   ├── FloatingAddButton.swift # FAB for adding notes
-│   │   │   ├── StackView.swift       # Focus mode - one note at a time
-│   │   │   └── ScannerView.swift     # QR code scanner
-│   │   ├── Services/                 # Business logic
-│   │   │   ├── NoteStore.swift       # @MainActor note CRUD operations
-│   │   │   └── CloudKitService.swift # actor for CloudKit sync
-│   │   └── Resources/                # Assets and config
-│   │       ├── Assets.xcassets/      # Images, colors, icons
-│   │       ├── ennote.entitlements   # iCloud + App Groups
-│   │       └── Info.plist            # App configuration
-│   ├── ennoteWidget/                 # Widget extension
-│   │   ├── ennoteWidget.swift        # Widget timeline provider
-│   │   ├── InteractiveWidget.swift   # iOS 17+ interactive buttons
+│   ├── ennote/                       # Main iOS app target
+│   │   ├── App/
+│   │   │   ├── ennoteApp.swift       # @main entry point, container setup
+│   │   │   └── ContentView.swift     # Root view, bottom bar and editor sheet
+│   │   ├── Views/
+│   │   │   ├── NoteListView.swift    # Main list with @Query and swipe actions
+│   │   │   ├── NoteRow.swift         # One note: toggle button plus text button
+│   │   │   ├── NewNoteBar.swift      # Glass bar in the bottom safe area
+│   │   │   └── NoteEditorSheet.swift # Attributed TextEditor for add and edit
+│   │   └── Resources/
+│   │       ├── Assets.xcassets/      # Accent color
+│   │       ├── ennote.icon/          # Icon Composer app icon
+│   │       └── ennote.entitlements   # App Groups
+│   ├── ennoteWidget/                 # Widget extension target
+│   │   ├── ennoteWidget.swift        # Timeline provider and widget views
+│   │   ├── InteractiveWidget.swift   # Tap-to-complete widget
+│   │   ├── NewNoteControl.swift      # Control Center button
 │   │   └── ennoteWidgetExtension.entitlements
-│   ├── Shared/                       # Code shared between app and widget
+│   ├── Shared/                       # Compiled into both targets
+│   │   ├── Note.swift                # @Model SwiftData note entity
+│   │   ├── NoteStorage.swift         # ModelContainer factory
 │   │   ├── AppGroup.swift            # App Group constants and helpers
-│   │   └── Settings.swift            # Shared settings/preferences
+│   │   └── Theme.swift               # Color.themeAccent
+│   ├── ennoteWidget-Info.plist       # Widget extension point identifier
 │   └── ennote.xcodeproj/             # Xcode project file
 ├── spec.md                           # Comprehensive design document
 ├── README.md                         # Project overview
@@ -63,19 +52,11 @@ ennote/
 ## Technology Stack
 
 ### iOS App
-- **Language**: Swift 5.9+
+- **Language**: Swift 6 (strict concurrency, default actor isolation `MainActor`)
 - **UI Framework**: SwiftUI
-- **Data Persistence**: SwiftData (iOS 17+)
-- **Sync**: CloudKit (private + public databases)
-- **Minimum Deployment**: iOS 17.0
-- **Widgets**: WidgetKit with App Intents (iOS 17+)
-- **QR Scanning**: AVFoundation (VisionKit alternative)
-
-### Web App
-- **Stack**: Vanilla HTML/CSS/JavaScript
-- **QR Generation**: qrcode.js library
-- **CloudKit**: CloudKit JS SDK (for public DB writes)
-- **Hosting**: Static files (Vercel, Cloudflare Pages, GitHub Pages)
+- **Data Persistence**: SwiftData
+- **Minimum Deployment**: iOS 26.0
+- **Widgets**: WidgetKit with App Intents, plus a Control Center control
 
 ### Development Tools
 - **IDE**: Xcode 15+
@@ -104,19 +85,6 @@ xcodebuild -project ennote.xcodeproj -scheme ennote -destination 'platform=iOS S
 
 **No test suite currently exists** - this is a personal project in early development.
 
-### Web App
-
-**Run locally:**
-```bash
-cd web
-python3 -m http.server 8000
-# Open http://localhost:8000
-```
-
-**Deploy:**
-- No build step required - just deploy the `web/` directory to any static host
-- Ensure CloudKit JS SDK is configured with the correct container ID
-
 ---
 
 ## Code Conventions
@@ -125,9 +93,9 @@ python3 -m http.server 8000
 
 **Naming:**
 - `camelCase` for variables, functions, properties: `activeNotes`, `completeNote()`, `isCompleted`
-- `PascalCase` for types: `Note`, `NoteStore`, `CloudKitService`
+- `PascalCase` for types: `Note`, `NoteStorage`
 - Prefix private functions with `private`: `private func setupContainer()`
-- Descriptive names over brevity: `fetchStackFromCloudKit()` not `fetchStack()`
+- Descriptive names over brevity: `activeNoteCount()` not `count()`
 
 **Code Organization:**
 - Use `// MARK: -` section headers for logical grouping
@@ -144,10 +112,8 @@ python3 -m http.server 8000
 - `#Preview` macro for SwiftUI previews
 
 **Concurrency:**
-- `@MainActor` for UI-bound classes: `@MainActor final class NoteStore`
-- `actor` for thread-safe services: `actor CloudKitService`
-- No explicit `@MainActor` needed in SwiftUI views (implicit)
-- `async/await` for CloudKit operations
+- Everything is `MainActor` by default (`SWIFT_DEFAULT_ACTOR_ISOLATION`)
+- Mark shared plumbing reachable from widgets and intents `nonisolated`: `nonisolated enum AppGroup`
 - `Task { }` for launching async work from sync context
 
 **Error Handling:**
@@ -155,27 +121,13 @@ python3 -m http.server 8000
 - Guard-let for early returns: `guard let container = modelContainer else { return }`
 - Print for non-critical errors: `print("Widget failed: \(error)")`
 - `fatalError()` only for unrecoverable setup issues
-- CloudKit errors checked by type: `catch let error as CKError where error.code == .unknownItem`
 
 **Comments:**
-- Triple-slash for type documentation: `/// CloudKit service for syncing notes`
+- Triple-slash for type documentation: `/// Shared note storage`
 - Inline for non-obvious logic: `// 5 min TTL`
 - Multi-line blocks for complex patterns
 - **Don't over-comment** - prefer self-documenting code
 - **Never add "what" comments** - focus on "why" if needed
-
-### JavaScript Style (Web App)
-
-**Structure:**
-- IIFE wrapper: `(function() { 'use strict'; ... })()`
-- Constants at top: `const EXPIRY_MINUTES = 5;`
-- DOM element references cached
-- Pure functions where possible
-- No framework - vanilla JS
-
-**Naming:**
-- `camelCase` for everything: `generateStackId()`, `parseNotes()`
-- `SCREAMING_SNAKE_CASE` for constants: `STACK_ID_LENGTH`
 
 ---
 
@@ -193,15 +145,11 @@ static var containerURL: URL? {
     FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: identifier)
 }
 
-// Usage in NoteStore.swift and ennoteApp.swift
-if AppGroup.containerURL != nil {
-    // Use App Group container (shared with widget)
-    let config = ModelConfiguration(groupContainer: .identifier(AppGroup.identifier))
-    modelContainer = try ModelContainer(for: Note.self, configurations: config)
-} else {
-    // Fall back to default container (local only, widget won't work)
-    modelContainer = try ModelContainer(for: Note.self)
-}
+// Every caller goes through the one factory in Shared/NoteStorage.swift
+let configuration = AppGroup.containerURL == nil
+    ? ModelConfiguration()
+    : ModelConfiguration(groupContainer: .identifier(AppGroup.identifier))
+return try? ModelContainer(for: Note.self, configurations: configuration)
 ```
 
 **Implications:**
@@ -220,24 +168,28 @@ import WidgetKit
 WidgetCenter.shared.reloadAllTimelines()
 ```
 
-**Pattern used in NoteStore.swift:**
-- Every function that modifies data calls `reloadWidgets()`
-- Centralized helper avoids forgetting to refresh
+Every mutation in `ContentView` and `NoteListView` calls it after saving.
 
 ### Toggle Dwell Time
 
-**Pattern**: Notes have a 0.65s delay before completing/uncompleting for smooth animation.
+**Pattern**: Toggling a note waits `toggleDwellTime` (5s) before committing. Toggling
+again inside that window cancels the pending change instead of queueing a second one.
 
 ```swift
-// In NoteRow.swift and widgets
-Task {
-    try? await Task.sleep(for: .seconds(0.65))
-    note.isCompleted.toggle()
-    // ... save and refresh
+// NoteListView.swift
+if let pending = pendingToggles.removeValue(forKey: id) {
+    pending.cancel()
+    return
+}
+pendingToggles[id] = Task {
+    try? await Task.sleep(for: toggleDwellTime)
+    guard !Task.isCancelled, note.modelContext != nil else { return }
+    // ... apply, save, refresh
 }
 ```
 
-**Why**: Gives time for swipe animation and haptic feedback before state change.
+**Why**: The dwell is the undo window. The `modelContext != nil` guard matters because
+a note can be deleted while its toggle is still pending.
 
 ### SwiftData Queries
 
@@ -265,7 +217,6 @@ These are specific to this project - when forking or adapting:
 1. Create new CloudKit container in Apple Developer portal
 2. Update `ennote.entitlements` and `ennoteWidgetExtension.entitlements`
 3. Update `AppGroup.identifier` in `Shared/AppGroup.swift`
-4. Update web app's CloudKit JS SDK configuration
 
 ### Force Unwraps
 
@@ -297,13 +248,10 @@ Key colors:
 1. Build and run in iOS Simulator
 2. Add notes, complete them, delete them
 3. Test widgets in widget gallery (long press home screen)
-4. Test QR flow: Web app → Generate QR → Scan in iOS app
-5. Test iCloud sync between devices (if available)
+4. Test iCloud sync between devices (if available)
 
 **Future**: Consider adding XCTest suite for:
 - Note CRUD operations
-- CloudKit sync logic
-- Stack QR generation/parsing
 - Widget timeline generation
 
 ---
@@ -346,29 +294,7 @@ User Input → SwiftUI View (@Environment(\.modelContext))
           ↓
      App Group Container (if available)
           ↓
-     Widget reads via NoteStore.shared.activeNotes
-```
-
-### QR Transfer (Web → iOS)
-
-```
-Web App:
-  User enters notes → Generate random Stack ID
-                  ↓
-            Save to CloudKit Public DB
-                  ↓
-            Generate QR: ennote://stack/{id}
-                  ↓
-            Display with 5-min countdown
-
-iOS App:
-  Scan QR → Extract Stack ID from URL
-         ↓
-    Fetch Stack from CloudKit Public DB
-         ↓
-    Import notes to local SwiftData
-         ↓
-    Mark Stack as fetched (or delete immediately)
+     Widget reads via NoteStorage.makeContainer()
 ```
 
 ### iCloud Sync (Future)
@@ -384,11 +310,18 @@ Not yet implemented. When added:
 
 ### Adding a New View
 
-1. Create file in `ennote/ennote/Views/`
+1. Create the file in `ennote/ennote/Views/`
 2. Use SwiftUI `View` protocol
 3. Add `#Preview` macro at bottom for live preview
-4. Import view in parent (usually `ContentView.swift`)
-5. Build to ensure no errors
+4. Build to ensure no errors
+
+**No project file edit needed.** The project uses file-system-synchronized groups
+(`objectVersion = 77`), so any file inside `ennote/`, `ennoteWidget/`, or `Shared/`
+joins the matching target automatically. `Shared/` belongs to both targets.
+
+One exception: the widget's `Info.plist` lives at the project root as
+`ennoteWidget-Info.plist`, because a plist inside a synchronized folder gets copied
+into the bundle as a resource and collides with the generated one.
 
 Example:
 ```swift
@@ -407,7 +340,7 @@ struct MyNewView: View {
 
 ### Adding a New Model Property
 
-1. Add property to model in `Models/Note.swift`
+1. Add property to model in `Shared/Note.swift`
 2. SwiftData handles migrations automatically for simple changes
 3. Update convenience methods if needed
 4. Rebuild - SwiftData will migrate existing data
@@ -429,13 +362,6 @@ struct MyNewView: View {
 2. Edit `Resources/Assets.xcassets/` for asset catalog colors
 3. Use `Color(hex: "#RRGGBB")` for custom colors
 4. Follow palette defined in `spec.md`
-
-### Web App Modifications
-
-1. Edit `web/app.js`, `web/index.html`, or `web/styles.css`
-2. No build step - refresh browser
-3. Test QR generation with sample notes
-4. **Don't test CloudKit writes** without valid container config
 
 ---
 
@@ -462,15 +388,6 @@ struct MyNewView: View {
 2. Ensure `WidgetCenter.shared.reloadAllTimelines()` is called after mutations
 3. Verify both targets have same App Group identifier
 
-### CloudKit errors in console
-
-**Cause**: CloudKit container not configured or user not signed into iCloud.
-
-**Solution**:
-- Ensure user is signed into iCloud on device
-- Verify entitlements include correct container ID
-- Check Apple Developer portal for container status
-
 ### SwiftData "Failed to create ModelContainer"
 
 **Cause**: Schema conflict or migration issue.
@@ -479,16 +396,6 @@ struct MyNewView: View {
 - Delete app from simulator/device (clears all data)
 - Reset simulator: Device → Erase All Content and Settings
 - Check model definition for obvious errors
-
-### Web app QR code not generating
-
-**Causes**:
-1. JavaScript error (check console)
-2. Missing qrcode.js library
-
-**Solutions**:
-1. Open browser dev tools, check console
-2. Verify qrcode.js is loaded in HTML
 
 ---
 
@@ -501,24 +408,11 @@ struct MyNewView: View {
 - Built-in iCloud sync support (when implemented)
 - Macro-based model definition is cleaner
 
-### Why actor for CloudKitService?
+### Why MainActor by default?
 
-- CloudKit operations are async and may be called from multiple contexts
-- Actor ensures thread-safe access without manual locks
-- Async/await integration is cleaner than callbacks
-
-### Why @MainActor for NoteStore?
-
-- NoteStore is primarily accessed from SwiftUI views (main thread)
-- Avoiding thread-hopping improves performance
-- SwiftData ModelContext requires main thread access
-
-### Why vanilla JS for web app?
-
-- No build step = instant iteration
-- Simple deployment (just static files)
-- App is single-page, minimal complexity
-- Framework would be overkill for QR generation
+- Nearly all of this app is SwiftUI views and SwiftData mutations, both main-thread
+- Opting the whole module in removes the annotation noise
+- The few pieces the widget and intents touch off the main actor are marked `nonisolated`
 
 ### Why widgets instead of complications?
 
@@ -534,11 +428,10 @@ struct MyNewView: View {
 See `spec.md` Phase 4 and 5 for planned features.
 
 **Next priorities** (inferred from incomplete features):
-1. Full CloudKit sync for personal notes (currently only QR transfer works)
-2. Stack mode improvements (timer, progress animations)
-3. Watch app (glanceable note view)
-4. Shortcuts integration ("Add to enɳoté" action)
-5. Comprehensive test suite
+1. Full CloudKit sync for personal notes
+2. Watch app (glanceable note view)
+3. Shortcuts integration ("Add to enɳoté" action)
+4. Comprehensive test suite
 
 ---
 
@@ -568,24 +461,20 @@ See `spec.md` Phase 4 and 5 for planned features.
 
 | Task | File |
 |------|------|
-| Add new model property | `ennote/ennote/Models/Note.swift` |
-| Change app colors | `ennote/ennote/App/Theme.swift` |
+| Add new model property | `ennote/Shared/Note.swift` |
+| Change app colors | `ennote/ennote/Resources/Assets.xcassets` |
 | Modify main list view | `ennote/ennote/Views/NoteListView.swift` |
 | Update widget layout | `ennoteWidget/ennoteWidget.swift` |
-| Change CloudKit logic | `ennote/ennote/Services/CloudKitService.swift` |
-| Modify note CRUD | `ennote/ennote/Services/NoteStore.swift` |
+| Modify note CRUD | `ennote/ennote/Views/NoteListView.swift` |
 | Update App Group ID | `ennote/Shared/AppGroup.swift` |
-| Web app QR logic | `web/app.js` |
-| Web app styling | `web/styles.css` |
 
 **Commands:**
 
 | Task | Command |
 |------|---------|
-| Run local web server | `cd web && python3 -m http.server 8000` |
 | View git history | `git log --oneline -20` |
 | Check Xcode project info | `xcodebuild -list -project ennote/ennote.xcodeproj` |
 
 ---
 
-*Last updated: 2025-01-26*
+*Last updated: 2026-08-31*

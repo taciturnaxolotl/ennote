@@ -2,7 +2,8 @@ import SwiftUI
 import SwiftData
 import WidgetKit
 
-private let toggleDwellTime: TimeInterval = 5
+/// How long a toggled note lingers before the change commits, leaving room to undo.
+private let toggleDwellTime: Duration = .seconds(5)
 
 struct NoteListView: View {
     @Environment(\.modelContext) private var modelContext
@@ -14,81 +15,23 @@ struct NoteListView: View {
            sort: \Note.completedAt, order: .reverse)
     private var completedNotes: [Note]
 
-    @Binding var showStackMode: Bool
     let onEditNote: (Note) -> Void
 
-    @State private var pendingCompletions: [UUID: Task<Void, Never>] = [:]
+    @State private var pendingToggles: [UUID: Task<Void, Never>] = [:]
 
     var body: some View {
         List {
-            // Active Notes Section
             Section {
                 ForEach(activeNotes) { note in
-                    NoteRow(note: note) {
-                        completeNote(note)
-                    } onEdit: {
-                        startEditing(note)
-                    }
-                    .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                        Button {
-                            completeNote(note)
-                        } label: {
-                            Label("Complete", systemImage: "checkmark")
-                        }
-                        .tint(Color.themeAccent)
-                    }
-                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                        Button(role: .destructive) {
-                            deleteNote(note)
-                        } label: {
-                            Label("Delete", systemImage: "trash")
-                        }
-                        .tint(.red)
-
-                        Button {
-                            startEditing(note)
-                        } label: {
-                            Label("Edit", systemImage: "pencil")
-                        }
-                        .tint(.blue)
-                    }
+                    row(for: note, completeLabel: "Complete", completeIcon: "checkmark")
                 }
                 .onMove(perform: moveNotes)
-
             }
 
-            // Completed Notes Section
             if !completedNotes.isEmpty {
                 Section {
                     ForEach(completedNotes.prefix(5)) { note in
-                        NoteRow(note: note) {
-                            uncompleteNote(note)
-                        } onEdit: {
-                            startEditing(note)
-                        }
-                        .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                            Button {
-                                uncompleteNote(note)
-                            } label: {
-                                Label("Restore", systemImage: "arrow.uturn.backward")
-                            }
-                            .tint(Color.themeAccent)
-                        }
-                        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                            Button(role: .destructive) {
-                                deleteNote(note)
-                            } label: {
-                                Label("Delete", systemImage: "trash")
-                            }
-                            .tint(.red)
-
-                            Button {
-                                startEditing(note)
-                            } label: {
-                                Label("Edit", systemImage: "pencil")
-                            }
-                            .tint(.blue)
-                        }
+                        row(for: note, completeLabel: "Restore", completeIcon: "arrow.uturn.backward")
                     }
 
                     if completedNotes.count > 5 {
@@ -106,60 +49,83 @@ struct NoteListView: View {
             }
         }
         .listStyle(.insetGrouped)
-        .contentMargins(.bottom, 80, for: .scrollContent)
+        .scrollEdgeEffectStyle(.soft, for: .top)
         .navigationTitle("enɳoté")
         .navigationBarTitleDisplayMode(.large)
-
         .scrollDismissesKeyboard(.interactively)
         .overlay {
             if activeNotes.isEmpty && completedNotes.isEmpty {
                 ContentUnavailableView {
                     Label("No Notes", systemImage: "note.text")
                 } description: {
-                    Text("Drag up to add your first note.")
+                    Text("Tap New Note to add your first one.")
                 }
             }
         }
     }
 
-    // MARK: - Actions
+    @ViewBuilder
+    private func row(for note: Note, completeLabel: String, completeIcon: String) -> some View {
+        NoteRow(note: note) {
+            toggle(note)
+        } onEdit: {
+            onEditNote(note)
+        }
+        .swipeActions(edge: .leading, allowsFullSwipe: true) {
+            Button {
+                toggle(note)
+            } label: {
+                Label(completeLabel, systemImage: completeIcon)
+            }
+            .tint(Color.themeAccent)
+        }
+        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+            Button(role: .destructive) {
+                deleteNote(note)
+            } label: {
+                Label("Delete", systemImage: "trash")
+            }
+            .tint(.red)
 
-    private func startEditing(_ note: Note) {
-        onEditNote(note)
+            Button {
+                onEditNote(note)
+            } label: {
+                Label("Edit", systemImage: "pencil")
+            }
+            .tint(.blue)
+        }
     }
 
-    private func completeNote(_ note: Note) {
-        if let existing = pendingCompletions[note.id] {
-            existing.cancel()
-            pendingCompletions.removeValue(forKey: note.id)
+    // MARK: - Actions
+
+    /// Toggling twice within the dwell time cancels the change instead of applying it.
+    private func toggle(_ note: Note) {
+        let id = note.id
+
+        if let pending = pendingToggles.removeValue(forKey: id) {
+            pending.cancel()
             return
         }
 
-        let task = Task {
-            try? await Task.sleep(for: .seconds(toggleDwellTime))
-            guard !Task.isCancelled else { return }
-            withAnimation(.snappy(duration: 0.25)) {
-                note.complete()
-            }
-            pendingCompletions.removeValue(forKey: note.id)
-            WidgetCenter.shared.reloadAllTimelines()
-        }
-        pendingCompletions[note.id] = task
-    }
+        pendingToggles[id] = Task {
+            try? await Task.sleep(for: toggleDwellTime)
+            guard !Task.isCancelled, note.modelContext != nil else { return }
 
-    private func uncompleteNote(_ note: Note) {
-        let newOrder = (activeNotes.last?.order ?? -1) + 1
-        Task {
-            try? await Task.sleep(for: .seconds(toggleDwellTime))
             withAnimation(.snappy(duration: 0.25)) {
-                note.uncomplete()
-                note.order = newOrder
+                if note.isCompleted {
+                    note.uncomplete()
+                    note.order = (activeNotes.last?.order ?? -1) + 1
+                } else {
+                    note.complete()
+                }
             }
+            pendingToggles.removeValue(forKey: id)
             WidgetCenter.shared.reloadAllTimelines()
         }
     }
 
     private func deleteNote(_ note: Note) {
+        cancelToggle(for: note)
         withAnimation {
             modelContext.delete(note)
         }
@@ -178,16 +144,21 @@ struct NoteListView: View {
     private func clearCompleted() {
         withAnimation {
             for note in completedNotes {
+                cancelToggle(for: note)
                 modelContext.delete(note)
             }
         }
         WidgetCenter.shared.reloadAllTimelines()
     }
+
+    private func cancelToggle(for note: Note) {
+        pendingToggles.removeValue(forKey: note.id)?.cancel()
+    }
 }
 
 #Preview {
     NavigationStack {
-        NoteListView(showStackMode: .constant(false), onEditNote: { _ in })
+        NoteListView(onEditNote: { _ in })
     }
     .modelContainer(for: Note.self, inMemory: true)
 }

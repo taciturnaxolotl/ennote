@@ -27,7 +27,24 @@ final class Note {
     }
 }
 
+// MARK: - Presentation
+
+extension Note {
+    /// The first line, shown wherever a note needs a one-liner.
+    var title: String {
+        content.components(separatedBy: .newlines).first ?? content
+    }
+
+    /// Everything after the first line, flattened for single-line display.
+    var subtitle: String? {
+        let lines = content.components(separatedBy: .newlines).dropFirst()
+        let rest = lines.joined(separator: " ").trimmingCharacters(in: .whitespaces)
+        return rest.isEmpty ? nil : rest
+    }
+}
+
 // MARK: - Convenience
+
 extension Note {
     func complete() {
         isCompleted = true
@@ -38,17 +55,4 @@ extension Note {
         isCompleted = false
         completedAt = nil
     }
-}
-
-// MARK: - Sample Data
-extension Note {
-    static let placeholder = Note(content: "Sample note")
-
-    static let sampleNotes: [Note] = [
-        Note(content: "Review PR for auth flow", order: 0),
-        Note(content: "Update dependencies", order: 1),
-        Note(content: "Write tests for sync", order: 2),
-        Note(content: "Deploy to staging", order: 3),
-        Note(content: "Send update to team", order: 4)
-    ]
 }
