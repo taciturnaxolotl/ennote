@@ -49,9 +49,10 @@ struct NoteListView: View {
             }
         }
         .listStyle(.insetGrouped)
+        .contentMargins(.top, 0, for: .scrollContent)
         .scrollEdgeEffectStyle(.soft, for: .top)
         .navigationTitle("enɳoté")
-        .navigationBarTitleDisplayMode(.large)
+        .toolbarTitleDisplayMode(.inlineLarge)
         .scrollDismissesKeyboard(.interactively)
         .overlay {
             if activeNotes.isEmpty && completedNotes.isEmpty {

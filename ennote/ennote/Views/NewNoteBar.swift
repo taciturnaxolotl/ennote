@@ -11,14 +11,16 @@ struct NewNoteBar: View {
                     .foregroundStyle(Color.themeAccent)
                 Text("New Note")
                     .foregroundStyle(.secondary)
-                Spacer(minLength: 0)
+                    .fontWeight(.semibold)
             }
             .font(.body)
+            .frame(maxWidth: .infinity)
             .padding(.vertical, 6)
             .padding(.horizontal, 4)
             .contentShape(.rect)
         }
         .buttonStyle(.glass)
+        .tint(.primary)
         .padding(.horizontal)
         .accessibilityLabel("New note")
     }
