@@ -18,6 +18,10 @@ struct NoteListView: View {
     let onEditNote: (Note) -> Void
 
     @State private var pendingToggles: [UUID: Task<Void, Never>] = [:]
+    @State private var showsDrakons = false
+
+    /// Everything the phone knows, in the order the archive should read.
+    private var archive: NoteArchive { NoteArchive(activeNotes + completedNotes) }
 
     var body: some View {
         List {
@@ -47,6 +51,8 @@ struct NoteListView: View {
                         .foregroundStyle(.secondary)
                 }
             }
+
+            Section { } footer: { drakonsFooter }
         }
         .listStyle(.insetGrouped)
         .contentMargins(.top, 0, for: .scrollContent)
@@ -54,6 +60,9 @@ struct NoteListView: View {
         .navigationTitle("enɳoté")
         .toolbarTitleDisplayMode(.inlineLarge)
         .scrollDismissesKeyboard(.interactively)
+        .sheet(isPresented: $showsDrakons) {
+            DrakonsSheet(archive: archive)
+        }
         .overlay {
             if activeNotes.isEmpty && completedNotes.isEmpty {
                 ContentUnavailableView {
@@ -63,6 +72,16 @@ struct NoteListView: View {
                 }
             }
         }
+    }
+
+    /// Quiet enough to ignore until the day you need it, with room to clear
+    /// the new note bar when the list is scrolled to the end.
+    private var drakonsFooter: some View {
+        Button("here be drakons") { showsDrakons = true }
+            .font(.footnote)
+            .foregroundStyle(.tertiary)
+            .frame(maxWidth: .infinity)
+            .padding(.bottom, 28)
     }
 
     @ViewBuilder
