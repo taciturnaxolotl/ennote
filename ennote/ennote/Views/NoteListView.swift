@@ -19,6 +19,9 @@ struct NoteListView: View {
 
     @State private var pendingToggles: [UUID: Task<Void, Never>] = [:]
     @State private var showsDrakons = false
+    /// Whether the list is long enough to scroll, which decides where the
+    /// drakons footer lives.
+    @State private var scrolls = false
 
     /// Everything the phone knows, in the order the archive should read.
     private var archive: NoteArchive { NoteArchive(activeNotes + completedNotes) }
@@ -49,10 +52,33 @@ struct NoteListView: View {
                         .foregroundStyle(.secondary)
                 }
             }
+
+            if scrolls {
+                Section { } footer: { drakonsFooter }
+                    .listSectionSpacing(8)
+            }
         }
-        .safeAreaBar(edge: .bottom) { drakonsFooter }
+        // Short list: the footer sits at the bottom of the screen. Long list:
+        // it rides along at the end of the content instead of hovering over it.
+        .onScrollGeometryChange(for: CGFloat.self) { geometry in
+            // containerSize spans the whole window, so the bars have to come
+            // out of it before the comparison means anything.
+            let usable = geometry.containerSize.height
+                - geometry.contentInsets.top
+                - geometry.contentInsets.bottom
+            return geometry.contentSize.height - usable
+        } action: { _, slack in
+            // The footer moving changes both sides of that sum, so leave a gap
+            // wider than the footer to keep it from flapping at the boundary.
+            if slack > 40 { scrolls = true } else if slack < -40 { scrolls = false }
+        }
+        .safeAreaBar(edge: .bottom) {
+            if !scrolls { drakonsFooter }
+        }
         .listStyle(.insetGrouped)
         .contentMargins(.top, 0, for: .scrollContent)
+        // The list's own tail margin, not the footer's padding, was the gap.
+        .contentMargins(.bottom, 0, for: .scrollContent)
         .scrollEdgeEffectStyle(.soft, for: .top)
         .navigationTitle("enɳoté")
         .toolbarTitleDisplayMode(.inlineLarge)
@@ -79,6 +105,7 @@ struct NoteListView: View {
             .foregroundStyle(.tertiary)
             .frame(maxWidth: .infinity)
             .padding(.top, 4)
+            .padding(.bottom, 12)
     }
 
     @ViewBuilder

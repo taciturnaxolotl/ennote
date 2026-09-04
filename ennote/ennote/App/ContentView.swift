@@ -47,7 +47,10 @@ struct ContentView: View {
                 }
             }
         }
-        .task { openPendingNote() }
+        .task {
+            KeyboardWarmUp.run()
+            openPendingNote()
+        }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active { openPendingNote() }
         }
