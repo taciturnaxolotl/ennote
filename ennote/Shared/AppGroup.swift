@@ -7,7 +7,7 @@ import Foundation
 /// local-only SwiftData container. Widgets and the Control Center button
 /// then have nothing to read, but the app itself works normally.
 nonisolated enum AppGroup {
-    static let identifier = "group.sh.dunkirk.ennote.beta"
+    static let identifier = "group.sh.dunkirk.ennote"
 
     static var containerURL: URL? {
         FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: identifier)

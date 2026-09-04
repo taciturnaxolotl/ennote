@@ -38,22 +38,19 @@ struct NoteListView: View {
                         row(for: note, completeLabel: "Restore", completeIcon: "arrow.uturn.backward")
                     }
 
-                    if completedNotes.count > 5 {
-                        Button("Clear completed (\(completedNotes.count))") {
-                            clearCompleted()
-                        }
-                        .foregroundStyle(.secondary)
-                        .font(.subheadline)
+                    Button("Clear completed (\(completedNotes.count))") {
+                        clearCompleted()
                     }
+                    .foregroundStyle(.secondary)
+                    .font(.subheadline)
                 } header: {
                     Text("Completed")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
             }
-
-            Section { } footer: { drakonsFooter }
         }
+        .safeAreaBar(edge: .bottom) { drakonsFooter }
         .listStyle(.insetGrouped)
         .contentMargins(.top, 0, for: .scrollContent)
         .scrollEdgeEffectStyle(.soft, for: .top)
@@ -74,14 +71,14 @@ struct NoteListView: View {
         }
     }
 
-    /// Quiet enough to ignore until the day you need it, with room to clear
-    /// the new note bar when the list is scrolled to the end.
+    /// Sits below the list rather than inside it, so an empty app doesn't
+    /// leave it stranded near the title.
     private var drakonsFooter: some View {
         Button("here be drakons") { showsDrakons = true }
             .font(.footnote)
             .foregroundStyle(.tertiary)
             .frame(maxWidth: .infinity)
-            .padding(.bottom, 28)
+            .padding(.top, 4)
     }
 
     @ViewBuilder
