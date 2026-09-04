@@ -8,19 +8,20 @@ struct NewNoteBar: View {
         Button(action: onTap) {
             HStack(spacing: 8) {
                 Image(systemName: "plus.circle.fill")
-                    .foregroundStyle(Color.themeAccent)
                 Text("New Note")
-                    .foregroundStyle(.secondary)
                     .fontWeight(.semibold)
             }
             .font(.body)
+            // Solid label: secondary would pick up the accent tint and muddy it.
+            .foregroundStyle(.primary)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 6)
             .padding(.horizontal, 4)
             .contentShape(.rect)
         }
+        // Clear glass, tinted just enough to lift it off the list behind it.
         .buttonStyle(.glass)
-        .tint(.primary)
+        .tint(Color.themeAccent)
         .padding(.horizontal)
         .accessibilityLabel("New note")
     }

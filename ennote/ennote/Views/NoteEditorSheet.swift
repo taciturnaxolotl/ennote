@@ -37,6 +37,9 @@ struct NoteEditorSheet: View {
         NavigationStack {
             TextEditor(text: $text, selection: $selection)
                 .textEditorStyle(.plain)
+                // Empty text has no runs to style, so the caret would fall back to
+                // body metrics and sit high above the title placeholder.
+                .font(.title.bold())
                 .padding(.horizontal, Self.padding - Self.textInsetX)
                 .focused($isFocused)
                 .overlay(alignment: .topLeading) {
