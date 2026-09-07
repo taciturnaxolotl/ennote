@@ -187,8 +187,19 @@ struct AccessoryCircularView: View {
     var body: some View {
         ZStack {
             AccessoryWidgetBackground()
-            Text("\(entry.activeCount)")
-                .font(.system(.title, design: .rounded).bold())
+
+            if entry.activeCount == 0 {
+                Image(systemName: "checkmark")
+                    .font(.title3.weight(.bold))
+            } else {
+                VStack(spacing: -2) {
+                    Text("\(entry.activeCount)")
+                        .font(.system(.title2, design: .rounded).weight(.bold))
+                    Text("NOTES")
+                        .font(.system(size: 8, weight: .semibold))
+                }
+                .minimumScaleFactor(0.6)
+            }
         }
         .widgetAccentable()
         .containerBackground(.clear, for: .widget)
@@ -199,19 +210,20 @@ struct AccessoryRectangularView: View {
     var entry: NoteEntry
 
     var body: some View {
-        Group {
-            if let note = entry.notes.first {
-                HStack {
-                    Image(systemName: "circle")
-                        .font(.caption2)
-                    Text(note.title)
-                        .lineLimit(1)
-                }
-            } else {
-                Text("All clear")
+        VStack(alignment: .leading, spacing: 1) {
+            Text(entry.activeCount == 0
+                 ? "All clear"
+                 : "^[\(entry.activeCount) note](inflect: true)")
+                .font(.headline)
+                .widgetAccentable()
+
+            if let next = entry.notes.first {
+                Text(next.title)
+                    .font(.caption)
+                    .lineLimit(2)
             }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .containerBackground(.clear, for: .widget)
     }
 }
@@ -220,7 +232,8 @@ struct AccessoryInlineView: View {
     var entry: NoteEntry
 
     var body: some View {
-        Text(entry.activeCount == 0 ? "All clear" : "^[\(entry.activeCount) note](inflect: true)")
+        // Inline sits beside the clock, so it gets the one useful line.
+        Text(entry.notes.first?.title ?? "All clear")
             .containerBackground(.clear, for: .widget)
     }
 }
