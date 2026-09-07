@@ -57,7 +57,7 @@ struct InteractiveWidgetView: View {
     @Environment(\.widgetFamily) var family
     var entry: NoteEntry
 
-    private var maxNotes: Int { family == .systemLarge ? 6 : 3 }
+    private var maxNotes: Int { family == .systemLarge ? 10 : 3 }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -75,7 +75,7 @@ struct InteractiveWidgetView: View {
                                 .foregroundStyle(Color.themeAccent)
                             Text(note.title)
                                 .font(index == 0 ? .headline : .subheadline)
-                                .foregroundStyle(index == 0 ? .primary : .secondary)
+                                .foregroundStyle(.white.opacity(index == 0 ? 1 : 0.6))
                                 .lineLimit(1)
                             Spacer(minLength: 0)
                         }
@@ -87,13 +87,9 @@ struct InteractiveWidgetView: View {
             }
 
             Spacer(minLength: 0)
-
-            if !entry.activityData.isEmpty {
-                StreakView(activityData: entry.activityData)
-            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .containerBackground(.fill.tertiary, for: .widget)
+        .containerBackground(Color.themeInk, for: .widget)
     }
 }
 
