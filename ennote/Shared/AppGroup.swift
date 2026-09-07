@@ -17,9 +17,6 @@ nonisolated enum AppGroup {
         UserDefaults(suiteName: identifier)
     }
 
-    /// Raised by the Control Center button, lowered by the app once it opens the editor.
-    static var wantsNewNote: Bool {
-        get { sharedDefaults?.bool(forKey: "wantsNewNote") ?? false }
-        set { sharedDefaults?.set(newValue, forKey: "wantsNewNote") }
-    }
+    /// What the Control Center button opens, handled in ContentView.
+    static let newNoteURL = URL(string: "ennote://new")!
 }

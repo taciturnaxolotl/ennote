@@ -18,12 +18,12 @@ struct NewNoteControl: ControlWidget {
 struct NewNoteIntent: AppIntent {
     static let title: LocalizedStringResource = "New Note"
     static let description = IntentDescription("Opens enɳoté ready to write a new note")
-    static let openAppWhenRun = true
 
     init() {}
 
-    func perform() async throws -> some IntentResult {
-        AppGroup.wantsNewNote = true
-        return .result()
+    /// A link rather than a shared flag: the app can already be launching while
+    /// this runs, and a URL waits its turn where a flag gets read too early.
+    func perform() async throws -> some IntentResult & OpensIntent {
+        .result(opensIntent: OpenURLIntent(AppGroup.newNoteURL))
     }
 }

@@ -3,7 +3,6 @@ import SwiftData
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
-    @Environment(\.scenePhase) private var scenePhase
     @Query(filter: #Predicate<Note> { !$0.isCompleted },
            sort: \Note.order)
     private var activeNotes: [Note]
@@ -49,10 +48,9 @@ struct ContentView: View {
         .task {
             recoverAbandonedDraft()
             KeyboardWarmUp.run()
-            openPendingNote()
         }
-        .onChange(of: scenePhase) { _, phase in
-            if phase == .active { openPendingNote() }
+        .onOpenURL { url in
+            if url == AppGroup.newNoteURL { editor = .new }
         }
     }
 
@@ -70,13 +68,6 @@ struct ContentView: View {
         else { return add(content: draft.content) }
 
         update(note, content: draft.content)
-    }
-
-    /// Consumes the flag the Control Center button leaves behind.
-    private func openPendingNote() {
-        guard AppGroup.wantsNewNote else { return }
-        AppGroup.wantsNewNote = false
-        editor = .new
     }
 
     private func add(content: String) {
