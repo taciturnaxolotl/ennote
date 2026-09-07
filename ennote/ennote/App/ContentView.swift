@@ -49,8 +49,10 @@ struct ContentView: View {
             recoverAbandonedDraft()
             KeyboardWarmUp.run()
         }
+        // Matched on the host, not the whole URL: the system hands links back
+        // normalised, and a stray trailing slash would fail an equality check.
         .onOpenURL { url in
-            if url == AppGroup.newNoteURL { editor = .new }
+            if url.scheme == AppGroup.newNoteURL.scheme, url.host == "new" { editor = .new }
         }
     }
 
