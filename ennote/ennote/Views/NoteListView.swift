@@ -1,6 +1,5 @@
 import SwiftUI
 import SwiftData
-import WidgetKit
 
 /// How long a toggled note lingers before the change commits, leaving room to undo.
 private let toggleDwellTime: Duration = .seconds(5)
@@ -22,9 +21,6 @@ struct NoteListView: View {
     /// Whether the list is long enough to scroll, which decides where the
     /// drakons footer lives.
     @State private var scrolls = false
-
-    /// Everything the phone knows, in the order the archive should read.
-    private var archive: NoteArchive { NoteArchive(activeNotes + completedNotes) }
 
     var body: some View {
         List {
@@ -84,7 +80,8 @@ struct NoteListView: View {
         .toolbarTitleDisplayMode(.inlineLarge)
         .scrollDismissesKeyboard(.interactively)
         .sheet(isPresented: $showsDrakons) {
-            DrakonsSheet(archive: archive)
+            // Built here so it snapshots on open instead of on every redraw.
+            DrakonsSheet(archive: NoteArchive(activeNotes + completedNotes))
         }
         .overlay {
             if activeNotes.isEmpty && completedNotes.isEmpty {
@@ -164,7 +161,7 @@ struct NoteListView: View {
                 }
             }
             pendingToggles.removeValue(forKey: id)
-            WidgetCenter.shared.reloadAllTimelines()
+            modelContext.commit()
         }
     }
 
@@ -173,7 +170,7 @@ struct NoteListView: View {
         withAnimation {
             modelContext.delete(note)
         }
-        WidgetCenter.shared.reloadAllTimelines()
+        modelContext.commit()
     }
 
     private func moveNotes(from source: IndexSet, to destination: Int) {
@@ -182,7 +179,7 @@ struct NoteListView: View {
         for (index, note) in notes.enumerated() {
             note.order = index
         }
-        WidgetCenter.shared.reloadAllTimelines()
+        modelContext.commit()
     }
 
     private func clearCompleted() {
@@ -192,7 +189,7 @@ struct NoteListView: View {
                 modelContext.delete(note)
             }
         }
-        WidgetCenter.shared.reloadAllTimelines()
+        modelContext.commit()
     }
 
     private func cancelToggle(for note: Note) {

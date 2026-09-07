@@ -1,4 +1,5 @@
 import SwiftData
+import WidgetKit
 
 /// Builds the SwiftData container shared by the app, its widgets, and its intents.
 nonisolated enum NoteStorage {
@@ -16,5 +17,18 @@ nonisolated enum NoteStorage {
             for: Note.self,
             configurations: ModelConfiguration(isStoredInMemoryOnly: true)
         )
+    }
+}
+
+// MARK: - Saving
+
+extension ModelContext {
+    /// Writes now rather than waiting on autosave, then refreshes the widgets.
+    /// Autosave is a runloop or two away, which is the window a dying phone
+    /// falls into; the widgets read the same store, so they go second.
+    @MainActor
+    func commit() {
+        try? save()
+        WidgetCenter.shared.reloadAllTimelines()
     }
 }

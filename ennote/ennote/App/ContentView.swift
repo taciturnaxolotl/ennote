@@ -1,6 +1,5 @@
 import SwiftUI
 import SwiftData
-import WidgetKit
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
@@ -48,12 +47,29 @@ struct ContentView: View {
             }
         }
         .task {
+            recoverAbandonedDraft()
             KeyboardWarmUp.run()
             openPendingNote()
         }
         .onChange(of: scenePhase) { _, phase in
             if phase == .active { openPendingNote() }
         }
+    }
+
+    /// The app died with the editor open, so the text becomes a real note.
+    private func recoverAbandonedDraft() {
+        guard let draft = NoteDraft.abandoned() else { return }
+        NoteDraft.clear(for: draft.id)
+        NoteDraft.markClosed()
+
+        // A note deleted mid-edit still leaves text worth keeping.
+        guard let id = draft.id,
+              let note = try? modelContext.fetch(
+                  FetchDescriptor<Note>(predicate: #Predicate { $0.id == id })
+              ).first
+        else { return add(content: draft.content) }
+
+        update(note, content: draft.content)
     }
 
     /// Consumes the flag the Control Center button leaves behind.
@@ -69,14 +85,14 @@ struct ContentView: View {
                 Note(content: content, order: (activeNotes.last?.order ?? -1) + 1)
             )
         }
-        WidgetCenter.shared.reloadAllTimelines()
+        modelContext.commit()
     }
 
     private func update(_ note: Note, content: String) {
         withAnimation {
             note.content = content
         }
-        WidgetCenter.shared.reloadAllTimelines()
+        modelContext.commit()
     }
 }
 

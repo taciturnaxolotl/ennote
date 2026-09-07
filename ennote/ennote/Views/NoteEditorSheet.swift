@@ -18,7 +18,10 @@ struct NoteEditorSheet: View {
     init(note: Note?, onSave: @escaping (String) -> Void) {
         self.note = note
         self.onSave = onSave
-        _text = State(initialValue: Self.styled(AttributedString(note?.content ?? "")))
+        // A draft only outlives the editor when it was never saved or cancelled,
+        // so it always wins over the stored copy.
+        let restored = NoteDraft.load(for: note?.id) ?? note?.content ?? ""
+        _text = State(initialValue: Self.styled(AttributedString(restored)))
     }
 
     private var isEditing: Bool { note != nil }
@@ -56,7 +59,7 @@ struct NoteEditorSheet: View {
                 .toolbarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
-                        Button("Cancel") { dismiss() }
+                        Button("Cancel", action: cancel)
                     }
                     ToolbarItem(placement: .confirmationAction) {
                         Button("Save", action: save)
@@ -67,13 +70,26 @@ struct NoteEditorSheet: View {
         }
         .presentationDragIndicator(.visible)
         .sensoryFeedback(.impact(weight: .light), trigger: savedCount)
+        // Styling rewrites `text` without touching a character, so the draft
+        // watches the plain string and skips the echo.
         .onChange(of: text) { text.transform(updating: &selection, body: Self.style) }
-        .task { isFocused = true }
+        .onChange(of: plainText) { NoteDraft.save(plainText, for: note?.id) }
+        .task {
+            isFocused = true
+            NoteDraft.markOpen(for: note?.id)
+        }
+        .onDisappear { NoteDraft.markClosed() }
+    }
+
+    private func cancel() {
+        NoteDraft.clear(for: note?.id)
+        dismiss()
     }
 
     private func save() {
         guard !trimmedText.isEmpty else { return }
         onSave(trimmedText)
+        NoteDraft.clear(for: note?.id)
         savedCount += 1
 
         if isEditing {
