@@ -177,6 +177,9 @@ struct NoteBoard: View {
 }
 
 // MARK: - Lock Screen Widget Views
+//
+// Accessory widgets draw on the wallpaper, so their container background is
+// clear; without one declared at all the system nags to adopt the API.
 
 struct AccessoryCircularView: View {
     var entry: NoteEntry
@@ -188,6 +191,7 @@ struct AccessoryCircularView: View {
                 .font(.system(.title, design: .rounded).bold())
         }
         .widgetAccentable()
+        .containerBackground(.clear, for: .widget)
     }
 }
 
@@ -195,17 +199,20 @@ struct AccessoryRectangularView: View {
     var entry: NoteEntry
 
     var body: some View {
-        if let note = entry.notes.first {
-            HStack {
-                Image(systemName: "circle")
-                    .font(.caption2)
-                Text(note.title)
-                    .lineLimit(1)
+        Group {
+            if let note = entry.notes.first {
+                HStack {
+                    Image(systemName: "circle")
+                        .font(.caption2)
+                    Text(note.title)
+                        .lineLimit(1)
+                }
+            } else {
+                Text("All clear")
             }
-        } else {
-            Text("No notes")
-                .foregroundStyle(.secondary)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .containerBackground(.clear, for: .widget)
     }
 }
 
@@ -213,11 +220,8 @@ struct AccessoryInlineView: View {
     var entry: NoteEntry
 
     var body: some View {
-        if entry.notes.isEmpty {
-            Text("enɳoté: No notes")
-        } else {
-            Text("enɳoté: \(entry.activeCount) notes")
-        }
+        Text(entry.activeCount == 0 ? "All clear" : "^[\(entry.activeCount) note](inflect: true)")
+            .containerBackground(.clear, for: .widget)
     }
 }
 
