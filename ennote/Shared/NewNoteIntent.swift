@@ -8,11 +8,13 @@ import AppIntents
 struct NewNoteIntent: AppIntent {
     static let title: LocalizedStringResource = "New Note"
     static let description = IntentDescription("Opens enɳoté ready to write a new note")
+    static let openAppWhenRun = true
+    static let isDiscoverable = true
 
     init() {}
 
-    /// The link does the opening, so `openAppWhenRun` stays off: with both, the
-    /// system brings the app forward and drops the link that says where to go.
+    /// Both halves are needed: `openAppWhenRun` is what actually brings the app
+    /// forward from a control, and the link is what tells it where to land.
     func perform() async throws -> some IntentResult & OpensIntent {
         .result(opensIntent: OpenURLIntent(AppGroup.newNoteURL))
     }
