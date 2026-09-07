@@ -57,52 +57,42 @@ struct InteractiveWidgetView: View {
     @Environment(\.widgetFamily) var family
     var entry: NoteEntry
 
-    private var maxNotes: Int {
-        family == .systemLarge ? 5 : 4
-    }
+    private var maxNotes: Int { family == .systemLarge ? 6 : 3 }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            if family == .systemLarge {
-                Text("enɳoté")
-                    .font(.headline)
-                Divider()
-            }
-
+        VStack(alignment: .leading, spacing: 8) {
             if entry.notes.isEmpty {
-                Text("No notes")
-                    .foregroundStyle(.secondary)
+                Text("All clear")
+                    .font(.title2.weight(.heavy))
+                    .foregroundStyle(Color.themeAccent)
             } else {
-                ForEach(entry.notes.prefix(maxNotes)) { note in
+                // The first note carries the weight; tapping any of them completes it.
+                ForEach(Array(entry.notes.prefix(maxNotes).enumerated()), id: \.element.id) { index, note in
                     Button(intent: CompleteNoteIntent(noteID: note.id)) {
-                        HStack(spacing: 8) {
+                        HStack(spacing: 10) {
                             Image(systemName: "circle")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
+                                .font(.footnote.weight(.bold))
+                                .foregroundStyle(Color.themeAccent)
                             Text(note.title)
-                                .font(.subheadline)
+                                .font(index == 0 ? .headline : .subheadline)
+                                .foregroundStyle(index == 0 ? .primary : .secondary)
                                 .lineLimit(1)
-                                .foregroundStyle(.primary)
-                            Spacer()
+                            Spacer(minLength: 0)
                         }
-                        .padding(.vertical, 2)
+                        .contentShape(.rect)
                     }
                     .buttonStyle(.plain)
                     .accessibilityLabel("Complete \(note.title)")
                 }
             }
 
-            Spacer()
+            Spacer(minLength: 0)
 
             if !entry.activityData.isEmpty {
                 StreakView(activityData: entry.activityData)
             }
         }
-        .overlay(alignment: .topTrailing) {
-            Image(systemName: "hand.tap")
-                .font(.caption2)
-                .foregroundStyle(.tertiary)
-        }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .containerBackground(.fill.tertiary, for: .widget)
     }
 }

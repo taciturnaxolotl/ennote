@@ -7,7 +7,12 @@ import SwiftData
 struct NoteEntry: TimelineEntry {
     let date: Date
     let notes: [WidgetNote]
+    /// Every active note, not just the ones that fit, for the counts and the "+N".
+    let activeCount: Int
     let activityData: [DayActivity]
+
+    /// The largest widget shows eight; nothing needs more than that in memory.
+    static let visibleLimit = 8
 
     static let placeholder = NoteEntry(
         date: .now,
@@ -16,10 +21,11 @@ struct NoteEntry: TimelineEntry {
             WidgetNote(id: "2", title: "Update dependencies"),
             WidgetNote(id: "3", title: "Write tests for sync")
         ],
+        activeCount: 3,
         activityData: DayActivity.sampleData
     )
 
-    static let empty = NoteEntry(date: .now, notes: [], activityData: [])
+    static let empty = NoteEntry(date: .now, notes: [], activeCount: 0, activityData: [])
 }
 
 struct DayActivity: Identifiable {
@@ -35,6 +41,11 @@ struct DayActivity: Identifiable {
     static var sampleData: [DayActivity] {
         let counts = [0, 1, 2, 0, 3, 1, 4]
         return days().enumerated().map { DayActivity(date: $1, completedCount: counts[$0]) }
+    }
+
+    /// Midnight on the oldest day the streak shows.
+    static var windowStart: Date {
+        Calendar.current.startOfDay(for: days().first ?? .now)
     }
 
     /// The last seven days, oldest first.
@@ -76,21 +87,31 @@ struct Provider: TimelineProvider {
         let context = ModelContext(container)
 
         do {
-            let active = try context.fetch(
-                FetchDescriptor<Note>(
-                    predicate: #Predicate { !$0.isCompleted },
-                    sortBy: [SortDescriptor(\.order)]
-                )
+            // A widget gets a tight memory budget, so it reads the notes it can
+            // draw and counts the rest rather than loading the whole store.
+            var activeDescriptor = FetchDescriptor<Note>(
+                predicate: #Predicate { !$0.isCompleted },
+                sortBy: [SortDescriptor(\.order)]
             )
+            let activeCount = try context.fetchCount(activeDescriptor)
+            activeDescriptor.fetchLimit = NoteEntry.visibleLimit
+            let active = try context.fetch(activeDescriptor)
+
+            // The streak only reaches back a week; older completions never load.
+            let floor = Date.distantPast
+            let cutoff = DayActivity.windowStart
             let completed = try context.fetch(
                 FetchDescriptor<Note>(
-                    predicate: #Predicate { $0.isCompleted && $0.completedAt != nil }
+                    predicate: #Predicate {
+                        $0.isCompleted && ($0.completedAt ?? floor) >= cutoff
+                    }
                 )
             )
 
             return NoteEntry(
                 date: .now,
                 notes: active.map { WidgetNote(id: $0.id.uuidString, title: $0.title) },
+                activeCount: activeCount,
                 activityData: activity(from: completed)
             )
         } catch {
@@ -115,30 +136,58 @@ struct Provider: TimelineProvider {
 
 // MARK: - Shared Pieces
 
-struct NoteList: View {
-    let notes: [WidgetNote]
-    let maxNotes: Int
-    var font: Font = .subheadline
+/// One layout for every home-screen size: the next note reads as a headline and
+/// the rest sit quietly under it. Only the row count and the type scale change.
+struct NoteBoard: View {
+    let entry: NoteEntry
+    var rows = 2
+    var headline: Font = .title3
+    var showsTitle = false
+
+    private var rest: ArraySlice<WidgetNote> { entry.notes.dropFirst().prefix(rows) }
+    private var hidden: Int { entry.activeCount - 1 - rest.count }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            ForEach(notes.prefix(maxNotes)) { note in
-                HStack(alignment: .firstTextBaseline, spacing: 8) {
-                    Image(systemName: "circle")
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
+        VStack(alignment: .leading, spacing: 6) {
+            if showsTitle {
+                Text("enɳoté")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Color.themeAccent)
+            }
+
+            if let next = entry.notes.first {
+                Text(next.title)
+                    .font(headline.weight(.heavy))
+                    .lineLimit(3)
+                    .minimumScaleFactor(0.75)
+
+                ForEach(rest) { note in
                     Text(note.title)
-                        .font(font)
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
                         .lineLimit(1)
-                    Spacer(minLength: 0)
+                }
+            } else {
+                Text("All clear")
+                    .font(headline.weight(.heavy))
+                    .foregroundStyle(Color.themeAccent)
+            }
+
+            Spacer(minLength: 0)
+
+            HStack(spacing: 6) {
+                if !entry.activityData.isEmpty {
+                    StreakView(activityData: entry.activityData)
+                }
+                if hidden > 0 {
+                    Text("+\(hidden)")
+                        .font(.caption2.weight(.bold))
+                        .foregroundStyle(.tertiary)
                 }
             }
-            if notes.count > maxNotes {
-                Text("+\(notes.count - maxNotes)")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .containerBackground(.fill.tertiary, for: .widget)
     }
 }
 
@@ -157,85 +206,8 @@ struct StreakView: View {
                         "\(day.date.formatted(.dateTime.weekday(.wide))): \(day.completedCount) completed"
                     )
             }
-            Spacer()
+            Spacer(minLength: 0)
         }
-    }
-}
-
-// MARK: - Home Screen Widget Views
-
-struct SmallWidgetView: View {
-    var entry: NoteEntry
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            if entry.notes.isEmpty {
-                Text("No notes")
-                    .font(.body)
-                    .foregroundStyle(.secondary)
-            } else {
-                ViewThatFits(in: .vertical) {
-                    NoteList(notes: entry.notes, maxNotes: 4)
-                    NoteList(notes: entry.notes, maxNotes: 3)
-                    NoteList(notes: entry.notes, maxNotes: 2)
-                    NoteList(notes: entry.notes, maxNotes: 1)
-                }
-            }
-
-            Spacer()
-
-            if !entry.activityData.isEmpty {
-                StreakView(activityData: entry.activityData)
-            }
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .containerBackground(.fill.tertiary, for: .widget)
-    }
-}
-
-struct MediumWidgetView: View {
-    var entry: NoteEntry
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            NoteList(notes: entry.notes, maxNotes: 4)
-
-            Spacer()
-
-            if !entry.activityData.isEmpty {
-                StreakView(activityData: entry.activityData)
-            }
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .containerBackground(.fill.tertiary, for: .widget)
-    }
-}
-
-struct LargeWidgetView: View {
-    var entry: NoteEntry
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text("enɳoté")
-                .font(.headline)
-
-            Divider()
-
-            ViewThatFits(in: .vertical) {
-                NoteList(notes: entry.notes, maxNotes: 8, font: .body)
-                NoteList(notes: entry.notes, maxNotes: 7, font: .body)
-                NoteList(notes: entry.notes, maxNotes: 6, font: .body)
-                NoteList(notes: entry.notes, maxNotes: 5, font: .body)
-                NoteList(notes: entry.notes, maxNotes: 4, font: .body)
-            }
-
-            Spacer()
-
-            if !entry.activityData.isEmpty {
-                StreakView(activityData: entry.activityData)
-            }
-        }
-        .containerBackground(.fill.tertiary, for: .widget)
     }
 }
 
@@ -247,7 +219,7 @@ struct AccessoryCircularView: View {
     var body: some View {
         ZStack {
             AccessoryWidgetBackground()
-            Text("\(entry.notes.count)")
+            Text("\(entry.activeCount)")
                 .font(.system(.title, design: .rounded).bold())
         }
         .widgetAccentable()
@@ -279,7 +251,7 @@ struct AccessoryInlineView: View {
         if entry.notes.isEmpty {
             Text("enɳoté: No notes")
         } else {
-            Text("enɳoté: \(entry.notes.count) notes")
+            Text("enɳoté: \(entry.activeCount) notes")
         }
     }
 }
@@ -312,12 +284,12 @@ struct WidgetEntryView: View {
 
     var body: some View {
         switch family {
-        case .systemMedium: MediumWidgetView(entry: entry)
-        case .systemLarge: LargeWidgetView(entry: entry)
+        case .systemMedium: NoteBoard(entry: entry, rows: 3, headline: .title2)
+        case .systemLarge: NoteBoard(entry: entry, rows: 7, headline: .title, showsTitle: true)
         case .accessoryCircular: AccessoryCircularView(entry: entry)
         case .accessoryRectangular: AccessoryRectangularView(entry: entry)
         case .accessoryInline: AccessoryInlineView(entry: entry)
-        default: SmallWidgetView(entry: entry)
+        default: NoteBoard(entry: entry)
         }
     }
 }
