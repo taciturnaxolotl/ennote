@@ -176,68 +176,6 @@ struct NoteBoard: View {
     }
 }
 
-// MARK: - Lock Screen Widget Views
-//
-// Accessory widgets draw on the wallpaper, so their container background is
-// clear; without one declared at all the system nags to adopt the API.
-
-struct AccessoryCircularView: View {
-    var entry: NoteEntry
-
-    var body: some View {
-        ZStack {
-            AccessoryWidgetBackground()
-
-            if entry.activeCount == 0 {
-                Image(systemName: "checkmark")
-                    .font(.title3.weight(.bold))
-            } else {
-                VStack(spacing: -2) {
-                    Text("\(entry.activeCount)")
-                        .font(.system(.title2, design: .rounded).weight(.bold))
-                    Text("NOTES")
-                        .font(.system(size: 8, weight: .semibold))
-                }
-                .minimumScaleFactor(0.6)
-            }
-        }
-        .widgetAccentable()
-        .containerBackground(.clear, for: .widget)
-    }
-}
-
-struct AccessoryRectangularView: View {
-    var entry: NoteEntry
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 1) {
-            Text(entry.activeCount == 0
-                 ? "All clear"
-                 : "^[\(entry.activeCount) note](inflect: true)")
-                .font(.headline)
-                .widgetAccentable()
-
-            if let next = entry.notes.first {
-                Text(next.title)
-                    .font(.caption)
-                    .lineLimit(2)
-            }
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .containerBackground(.clear, for: .widget)
-    }
-}
-
-struct AccessoryInlineView: View {
-    var entry: NoteEntry
-
-    var body: some View {
-        // Inline sits beside the clock, so it gets the one useful line.
-        Text(entry.notes.first?.title ?? "All clear")
-            .containerBackground(.clear, for: .widget)
-    }
-}
-
 // MARK: - Widget Configuration
 
 struct ennoteWidget: Widget {
@@ -249,14 +187,7 @@ struct ennoteWidget: Widget {
         }
         .configurationDisplayName("enɳoté")
         .description("See your notes, and tap one to complete it.")
-        .supportedFamilies([
-            .systemSmall,
-            .systemMedium,
-            .systemLarge,
-            .accessoryCircular,
-            .accessoryRectangular,
-            .accessoryInline
-        ])
+        .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
     }
 }
 
@@ -268,9 +199,6 @@ struct WidgetEntryView: View {
         switch family {
         case .systemMedium: NoteBoard(entry: entry, rows: 7)
         case .systemLarge: NoteBoard(entry: entry, rows: 16, font: .body)
-        case .accessoryCircular: AccessoryCircularView(entry: entry)
-        case .accessoryRectangular: AccessoryRectangularView(entry: entry)
-        case .accessoryInline: AccessoryInlineView(entry: entry)
         default: NoteCount(entry: entry)
         }
     }
