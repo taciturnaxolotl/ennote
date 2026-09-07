@@ -57,7 +57,7 @@ struct InteractiveWidgetView: View {
     @Environment(\.widgetFamily) var family
     var entry: NoteEntry
 
-    private var maxNotes: Int { family == .systemLarge ? 10 : 3 }
+    private var maxNotes: Int { family == .systemLarge ? 12 : 3 }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {

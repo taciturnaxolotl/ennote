@@ -10,8 +10,8 @@ struct NoteEntry: TimelineEntry {
     /// Every active note, not just the ones that fit, for the count and the "+N".
     let activeCount: Int
 
-    /// A full large widget shows twelve; nothing needs more than that in memory.
-    static let visibleLimit = 12
+    /// A full large widget shows fourteen; nothing needs more than that in memory.
+    static let visibleLimit = 14
 
     static let placeholder = NoteEntry(
         date: .now,
@@ -112,8 +112,6 @@ struct NoteBoard: View {
     let rows: Int
     var font: Font = .subheadline
 
-    private var hidden: Int { entry.activeCount - min(rows, entry.notes.count) }
-
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             if entry.notes.isEmpty {
@@ -121,40 +119,51 @@ struct NoteBoard: View {
                     .font(.title2.weight(.heavy))
                     .foregroundStyle(Color.themeAccent)
             } else {
-                // Large type sizes push rows out of the widget, so drop a few
-                // rather than clip the last one in half.
+                // One row at a time, so a widget that can hold eleven shows
+                // eleven instead of dropping to the next round number.
                 ViewThatFits(in: .vertical) {
                     list(rows)
-                    list(rows * 2 / 3)
-                    list(rows / 2)
+                    list(rows - 1)
+                    list(rows - 2)
+                    list(rows - 3)
+                    list(rows - 4)
+                    list(rows - 5)
+                    list(rows - 6)
+                    list(rows - 7)
                 }
             }
 
             Spacer(minLength: 0)
-
-            if hidden > 0 {
-                Text("+\(hidden) more")
-                    .font(.caption2.weight(.bold))
-                    .foregroundStyle(.white.opacity(0.4))
-            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .containerBackground(Color.themeInk, for: .widget)
     }
 
     private func list(_ count: Int) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
-            ForEach(entry.notes.prefix(count)) { note in
+        let shown = entry.notes.prefix(max(count, 1))
+        let hidden = entry.activeCount - shown.count
+
+        return VStack(alignment: .leading, spacing: 6) {
+            ForEach(shown) { note in
                 HStack(alignment: .firstTextBaseline, spacing: 8) {
                     Image(systemName: "circle")
                         .font(.caption2.weight(.bold))
                         .foregroundStyle(Color.themeAccent)
+                        .frame(width: 12, alignment: .leading)
                     Text(note.title)
                         .font(font)
                         .foregroundStyle(.white)
                         .lineLimit(1)
                     Spacer(minLength: 0)
                 }
+            }
+
+            // Reads as the tail of the list rather than a lonely footer.
+            if hidden > 0 {
+                Text("+\(hidden) more")
+                    .font(font)
+                    .foregroundStyle(.white.opacity(0.35))
+                    .padding(.leading, 20)
             }
         }
     }
@@ -233,8 +242,8 @@ struct WidgetEntryView: View {
 
     var body: some View {
         switch family {
-        case .systemMedium: NoteBoard(entry: entry, rows: 4)
-        case .systemLarge: NoteBoard(entry: entry, rows: 12, font: .body)
+        case .systemMedium: NoteBoard(entry: entry, rows: 5)
+        case .systemLarge: NoteBoard(entry: entry, rows: 14, font: .body)
         case .accessoryCircular: AccessoryCircularView(entry: entry)
         case .accessoryRectangular: AccessoryRectangularView(entry: entry)
         case .accessoryInline: AccessoryInlineView(entry: entry)
