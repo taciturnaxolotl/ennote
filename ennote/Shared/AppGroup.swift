@@ -19,4 +19,20 @@ nonisolated enum AppGroup {
 
     /// What the Control Center button opens, handled in ContentView.
     static let newNoteURL = URL(string: "ennote://new")!
+
+    private static let newNoteKey = "newNoteRequestedAt"
+
+    /// Raised by the Control Center button beside the link it opens. The link is
+    /// the quick path; this is the one that survives the link being dropped.
+    static func requestNewNote() {
+        sharedDefaults?.set(Date.now.timeIntervalSince1970, forKey: newNoteKey)
+    }
+
+    /// Takes the request if there is a fresh one, so a button pressed while the
+    /// app never came forward doesn't open an editor hours later.
+    static func takeNewNoteRequest() -> Bool {
+        guard let raised = sharedDefaults?.double(forKey: newNoteKey), raised > 0 else { return false }
+        sharedDefaults?.removeObject(forKey: newNoteKey)
+        return Date.now.timeIntervalSince1970 - raised < 10
+    }
 }

@@ -13,9 +13,11 @@ struct NewNoteIntent: AppIntent {
 
     init() {}
 
-    /// Both halves are needed: `openAppWhenRun` is what actually brings the app
-    /// forward from a control, and the link is what tells it where to land.
+    /// `openAppWhenRun` is what brings the app forward from a control; the link
+    /// and the flag are two ways of telling it where to land, because a control's
+    /// link does not always survive the trip.
     func perform() async throws -> some IntentResult & OpensIntent {
-        .result(opensIntent: OpenURLIntent(AppGroup.newNoteURL))
+        AppGroup.requestNewNote()
+        return .result(opensIntent: OpenURLIntent(AppGroup.newNoteURL))
     }
 }

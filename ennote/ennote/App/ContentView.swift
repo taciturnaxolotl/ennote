@@ -7,6 +7,7 @@ struct ContentView: View {
            sort: \Note.order)
     private var activeNotes: [Note]
 
+    @Environment(\.scenePhase) private var scenePhase
     @State private var editor: Editor?
 
     enum Editor: Identifiable {
@@ -48,11 +49,28 @@ struct ContentView: View {
         .task {
             recoverAbandonedDraft()
             KeyboardWarmUp.run()
+            await openRequestedNote()
+        }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active { Task { await openRequestedNote() } }
         }
         // Matched on the host, not the whole URL: the system hands links back
         // normalised, and a stray trailing slash would fail an equality check.
         .onOpenURL { url in
             if url.scheme == AppGroup.newNoteURL.scheme, url.host == "new" { editor = .new }
+        }
+    }
+
+    /// The Control Center button writes its request from another process, and
+    /// that write can land after the app is already on screen, so the first
+    /// moments are watched rather than sampled once.
+    private func openRequestedNote() async {
+        for _ in 0..<10 {
+            if AppGroup.takeNewNoteRequest() {
+                editor = .new
+                return
+            }
+            try? await Task.sleep(for: .milliseconds(200))
         }
     }
 
