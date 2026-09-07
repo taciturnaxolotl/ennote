@@ -1,6 +1,7 @@
 import WidgetKit
 import SwiftUI
 import SwiftData
+import AppIntents
 
 // MARK: - Timeline Entry
 
@@ -106,7 +107,8 @@ struct NoteCount: View {
     }
 }
 
-/// The bigger widgets answer the other one: which notes.
+/// The bigger widgets answer the other one: which notes, each one a tap
+/// away from done.
 struct NoteBoard: View {
     let entry: NoteEntry
     let rows: Int
@@ -145,17 +147,22 @@ struct NoteBoard: View {
 
         return VStack(alignment: .leading, spacing: 6) {
             ForEach(shown) { note in
-                HStack(alignment: .firstTextBaseline, spacing: 8) {
-                    Image(systemName: "circle")
-                        .font(.caption2.weight(.bold))
-                        .foregroundStyle(Color.themeAccent)
-                        .frame(width: 12, alignment: .leading)
-                    Text(note.title)
-                        .font(font)
-                        .foregroundStyle(.white)
-                        .lineLimit(1)
-                    Spacer(minLength: 0)
+                Button(intent: CompleteNoteIntent(noteID: note.id)) {
+                    HStack(alignment: .firstTextBaseline, spacing: 8) {
+                        Image(systemName: "circle")
+                            .font(.caption2.weight(.bold))
+                            .foregroundStyle(Color.themeAccent)
+                            .frame(width: 12, alignment: .leading)
+                        Text(note.title)
+                            .font(font)
+                            .foregroundStyle(.white)
+                            .lineLimit(1)
+                        Spacer(minLength: 0)
+                    }
+                    .contentShape(.rect)
                 }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Complete \(note.title)")
             }
 
             // Reads as the tail of the list rather than a lonely footer.
@@ -224,7 +231,7 @@ struct ennoteWidget: Widget {
             WidgetEntryView(entry: entry)
         }
         .configurationDisplayName("enɳoté")
-        .description("View your notes at a glance.")
+        .description("See your notes, and tap one to complete it.")
         .supportedFamilies([
             .systemSmall,
             .systemMedium,
@@ -258,7 +265,6 @@ struct WidgetEntryView: View {
 struct ennoteWidgetBundle: WidgetBundle {
     var body: some Widget {
         ennoteWidget()
-        ennoteInteractiveWidget()
         NewNoteControl()
     }
 }
