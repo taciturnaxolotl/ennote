@@ -57,7 +57,7 @@ struct InteractiveWidgetView: View {
     @Environment(\.widgetFamily) var family
     var entry: NoteEntry
 
-    private var maxNotes: Int { family == .systemLarge ? 12 : 3 }
+    private var maxNotes: Int { family == .systemLarge ? 10 : 4 }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -85,10 +85,8 @@ struct InteractiveWidgetView: View {
                     .accessibilityLabel("Complete \(note.title)")
                 }
             }
-
-            Spacer(minLength: 0)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
         .containerBackground(Color.themeInk, for: .widget)
     }
 }

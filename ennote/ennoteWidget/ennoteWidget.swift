@@ -10,8 +10,8 @@ struct NoteEntry: TimelineEntry {
     /// Every active note, not just the ones that fit, for the count and the "+N".
     let activeCount: Int
 
-    /// A full large widget shows fourteen; nothing needs more than that in memory.
-    static let visibleLimit = 14
+    /// A full large widget shows sixteen; nothing needs more than that in memory.
+    static let visibleLimit = 16
 
     static let placeholder = NoteEntry(
         date: .now,
@@ -132,10 +132,10 @@ struct NoteBoard: View {
                     list(rows - 7)
                 }
             }
-
-            Spacer(minLength: 0)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        // Whatever the fitter leaves over splits top and bottom, so a list that
+        // stops a row short still sits evenly in the frame.
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
         .containerBackground(Color.themeInk, for: .widget)
     }
 
@@ -242,8 +242,8 @@ struct WidgetEntryView: View {
 
     var body: some View {
         switch family {
-        case .systemMedium: NoteBoard(entry: entry, rows: 5)
-        case .systemLarge: NoteBoard(entry: entry, rows: 14, font: .body)
+        case .systemMedium: NoteBoard(entry: entry, rows: 7)
+        case .systemLarge: NoteBoard(entry: entry, rows: 16, font: .body)
         case .accessoryCircular: AccessoryCircularView(entry: entry)
         case .accessoryRectangular: AccessoryRectangularView(entry: entry)
         case .accessoryInline: AccessoryInlineView(entry: entry)
