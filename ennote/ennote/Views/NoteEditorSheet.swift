@@ -118,7 +118,7 @@ struct NoteEditorSheet: View {
 
         if titleEnd < string.endIndex {
             string[titleEnd..<string.endIndex].font = .body
-            string[titleEnd..<string.endIndex].foregroundColor = .secondary
+            string[titleEnd..<string.endIndex].foregroundColor = .primary
         }
     }
 }
