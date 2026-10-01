@@ -31,9 +31,9 @@ struct ContentView: View {
 
     var body: some View {
         NavigationStack {
-            NoteListView(onEditNote: { editor = .existing($0) })
+            NoteListView(onEditNote: { open(.existing($0)) })
                 .safeAreaBar(edge: .bottom) {
-                    NewNoteBar { editor = .new }
+                    NewNoteBar { open(.new) }
                 }
         }
         .tint(Color.themeAccent)
@@ -47,18 +47,33 @@ struct ContentView: View {
             }
         }
         .task {
-            recoverAbandonedDraft()
+            NoteDraft.markClosed()
+            flushExpiredDrafts()
             KeyboardWarmUp.run()
             await openRequestedNote()
         }
+        .task(id: editor?.id) {
+            guard editor == nil else { return }
+            try? await Task.sleep(for: NoteDraft.lifetime)
+            if !Task.isCancelled { flushExpiredDrafts() }
+        }
         .onChange(of: scenePhase) { _, phase in
-            if phase == .active { Task { await openRequestedNote() } }
+            guard phase == .active else { return }
+            flushExpiredDrafts()
+            Task { await openRequestedNote() }
         }
         // Matched on the host, not the whole URL: the system hands links back
         // normalised, and a stray trailing slash would fail an equality check.
         .onOpenURL { url in
-            if url.scheme == AppGroup.newNoteURL.scheme, url.host == "new" { editor = .new }
+            if url.scheme == AppGroup.newNoteURL.scheme, url.host == "new" { open(.new) }
         }
+    }
+
+    /// Flushing first means the editor never restores a draft that is about to
+    /// be written over its note.
+    private func open(_ target: Editor) {
+        flushExpiredDrafts()
+        editor = target
     }
 
     /// The Control Center button writes its request from another process, and
@@ -67,27 +82,28 @@ struct ContentView: View {
     private func openRequestedNote() async {
         for _ in 0..<10 {
             if AppGroup.takeNewNoteRequest() {
-                editor = .new
+                open(.new)
                 return
             }
             try? await Task.sleep(for: .milliseconds(200))
         }
     }
 
-    /// The app died with the editor open, so the text becomes a real note.
-    private func recoverAbandonedDraft() {
-        guard let draft = NoteDraft.abandoned() else { return }
-        NoteDraft.clear(for: draft.id)
-        NoteDraft.markClosed()
+    /// Drafts left in the editor past their reopen window become real notes.
+    private func flushExpiredDrafts() {
+        for draft in NoteDraft.takeExpired() {
+            // A note deleted mid-edit still leaves text worth keeping.
+            guard let id = draft.id,
+                  let note = try? modelContext.fetch(
+                      FetchDescriptor<Note>(predicate: #Predicate { $0.id == id })
+                  ).first
+            else {
+                add(content: draft.content)
+                continue
+            }
 
-        // A note deleted mid-edit still leaves text worth keeping.
-        guard let id = draft.id,
-              let note = try? modelContext.fetch(
-                  FetchDescriptor<Note>(predicate: #Predicate { $0.id == id })
-              ).first
-        else { return add(content: draft.content) }
-
-        update(note, content: draft.content)
+            update(note, content: draft.content)
+        }
     }
 
     private func add(content: String) {
