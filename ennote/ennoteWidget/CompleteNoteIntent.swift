@@ -25,10 +25,10 @@ struct CompleteNoteIntent: AppIntent {
         let context = ModelContext(container)
         let descriptor = FetchDescriptor<Note>(predicate: #Predicate { $0.id == uuid })
 
-        if let note = try? context.fetch(descriptor).first {
+        for note in (try? context.fetch(descriptor)) ?? [] {
             note.complete()
-            try? context.save()
         }
+        try? context.save()
 
         WidgetCenter.shared.reloadAllTimelines()
         return .result()
