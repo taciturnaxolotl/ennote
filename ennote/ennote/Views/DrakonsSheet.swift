@@ -11,6 +11,7 @@ struct DrakonsSheet: View {
     @Environment(\.dismiss) private var dismiss
     @State private var exportDocument: ArchiveDocument?
     @State private var isImporting = false
+    @State private var confirmsMerge = false
     @State private var report: String?
 
     var body: some View {
@@ -36,6 +37,16 @@ struct DrakonsSheet: View {
                         Label("Import Notes", systemImage: "square.and.arrow.down")
                     }
                 }
+
+                Section {
+                    Button {
+                        confirmsMerge = true
+                    } label: {
+                        Label("Merge Duplicates", systemImage: "arrow.triangle.merge")
+                    }
+                } footer: {
+                    Text("Merge duplicate notes from sync.")
+                }
             }
             .navigationTitle("here be drakons")
             .toolbarTitleDisplayMode(.inline)
@@ -57,6 +68,18 @@ struct DrakonsSheet: View {
         }
         .fileImporter(isPresented: $isImporting, allowedContentTypes: [.json]) { result in
             report = restore(from: result)
+        }
+        .confirmationDialog(
+            "Merge duplicates?",
+            isPresented: $confirmsMerge,
+            titleVisibility: .visible
+        ) {
+            Button("Merge", role: .destructive) {
+                let removed = NoteMaintenance.collapseDuplicates(in: modelContext)
+                report = removed == 0 ? "No duplicates found." : "Merged \(removed) duplicate\(removed == 1 ? "" : "s")."
+            }
+        } message: {
+            Text("Keeps one copy of each note and deletes the rest. Do this on one device with the others closed.")
         }
         .alert(
             "enɳoté",

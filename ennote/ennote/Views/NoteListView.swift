@@ -25,7 +25,7 @@ struct NoteListView: View {
     var body: some View {
         List {
             Section {
-                ForEach(activeNotes) { note in
+                ForEach(activeNotes, id: \.persistentModelID) { note in
                     row(for: note, completeLabel: "Complete", completeIcon: "checkmark")
                 }
                 .onMove(perform: moveNotes)
@@ -33,7 +33,7 @@ struct NoteListView: View {
 
             if !completedNotes.isEmpty {
                 Section {
-                    ForEach(completedNotes.prefix(5)) { note in
+                    ForEach(completedNotes.prefix(5), id: \.persistentModelID) { note in
                         row(for: note, completeLabel: "Restore", completeIcon: "arrow.uturn.backward")
                     }
 
