@@ -3,11 +3,15 @@ import WidgetKit
 
 /// Builds the SwiftData container shared by the app, its widgets, and its intents.
 nonisolated enum NoteStorage {
-    /// Prefers the App Group container so widgets can read the same store.
+    /// Prefers the App Group container so widgets can read the same store, and
+    /// mirrors it to CloudKit so notes follow the user across devices.
     static func makeContainer() -> ModelContainer? {
         let configuration = AppGroup.containerURL == nil
             ? ModelConfiguration()
-            : ModelConfiguration(groupContainer: .identifier(AppGroup.identifier))
+            : ModelConfiguration(
+                groupContainer: .identifier(AppGroup.identifier),
+                cloudKitDatabase: .private(AppGroup.cloudContainerIdentifier)
+            )
         return try? ModelContainer(for: Note.self, configurations: configuration)
     }
 

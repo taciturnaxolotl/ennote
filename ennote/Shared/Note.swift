@@ -3,11 +3,13 @@ import SwiftData
 
 @Model
 final class Note {
-    var id: UUID
-    var content: String
-    var isCompleted: Bool
-    var order: Int
-    var createdAt: Date
+    // CloudKit mirroring needs every attribute defaulted or optional, and no
+    // `.unique` constraints.
+    var id: UUID = UUID()
+    var content: String = ""
+    var isCompleted: Bool = false
+    var order: Int = 0
+    var createdAt: Date = Date()
     var completedAt: Date?
 
     init(

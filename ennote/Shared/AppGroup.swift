@@ -9,6 +9,10 @@ import Foundation
 nonisolated enum AppGroup {
     static let identifier = "group.sh.dunkirk.ennote"
 
+    /// The CloudKit private-database container that mirrors the store across a
+    /// user's devices. Like App Groups, it needs a paid developer account.
+    static let cloudContainerIdentifier = "iCloud.sh.dunkirk.ennote"
+
     static var containerURL: URL? {
         FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: identifier)
     }

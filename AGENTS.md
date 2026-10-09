@@ -210,13 +210,13 @@ let notes = try context.fetch(descriptor)
 
 ### CloudKit Container ID
 
-**Current**: `iCloud.sh.dunkirk.ennote.beta`
-**App Group**: `group.sh.dunkirk.ennote.beta`
+**CloudKit container**: `iCloud.sh.dunkirk.ennote` (`AppGroup.cloudContainerIdentifier`)
+**App Group**: `group.sh.dunkirk.ennote` (`AppGroup.identifier`)
 
 These are specific to this project - when forking or adapting:
 1. Create new CloudKit container in Apple Developer portal
 2. Update `ennote.entitlements` and `ennoteWidgetExtension.entitlements`
-3. Update `AppGroup.identifier` in `Shared/AppGroup.swift`
+3. Update `AppGroup.identifier` and `AppGroup.cloudContainerIdentifier` in `Shared/AppGroup.swift`
 
 ### Force Unwraps
 
@@ -297,12 +297,17 @@ User Input → SwiftUI View (@Environment(\.modelContext))
      Widget reads via NoteStorage.makeContainer()
 ```
 
-### iCloud Sync (Future)
+### iCloud Sync
 
-Not yet implemented. When added:
-- Use CloudKit Private DB for user's personal notes
-- SwiftData + CloudKit integration
-- Automatic sync across user's devices
+The group-container configuration in `Shared/NoteStorage.swift` sets
+`cloudKitDatabase: .private(...)`, so SwiftData mirrors the store to the user's
+CloudKit private database and syncs it across their devices automatically. The
+app registers for background `remote-notification` so pushes arrive while it
+runs. Requirements:
+- A paid developer account (CloudKit and App Groups both need one)
+- Every `Note` attribute optional or defaulted, and no `.unique` constraints
+- An iCloud account signed in on the device (the simulator syncs too once
+  signed in; without an account it stays local-only)
 
 ---
 
@@ -428,10 +433,9 @@ struct MyNewView: View {
 See `spec.md` Phase 4 and 5 for planned features.
 
 **Next priorities** (inferred from incomplete features):
-1. Full CloudKit sync for personal notes
-2. Watch app (glanceable note view)
-3. Shortcuts integration ("Add to enɳoté" action)
-4. Comprehensive test suite
+1. Watch app (glanceable note view)
+2. Shortcuts integration ("Add to enɳoté" action)
+3. Comprehensive test suite
 
 ---
 
