@@ -353,7 +353,7 @@
 				CODE_SIGN_ENTITLEMENTS = ennote/Resources/ennote.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "ennote-Info.plist";
@@ -385,7 +385,7 @@
 				CODE_SIGN_ENTITLEMENTS = ennote/Resources/ennote.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "ennote-Info.plist";
@@ -417,7 +417,7 @@
 				CODE_SIGN_ENTITLEMENTS = ennoteWidget/ennoteWidgetExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "ennoteWidget-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "ennote Widget";
@@ -443,7 +443,7 @@
 				CODE_SIGN_ENTITLEMENTS = ennoteWidget/ennoteWidgetExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "ennoteWidget-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "ennote Widget";
